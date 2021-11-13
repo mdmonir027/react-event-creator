@@ -1,9 +1,13 @@
 import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import Home from './pages/Home.page';
 
 const App = () => {
   return (
     <div>
-      <h2>Event app</h2>
+      <Routes>
+        <Route path='/' element={<Home />} />
+      </Routes>
     </div>
   );
 };
