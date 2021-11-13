@@ -33,6 +33,7 @@ const LoginForm = () => {
       >
         <Input prefix={<UserOutlined />} type='text' placeholder='Username' />
       </Form.Item>
+
       <Form.Item
         name='password'
         rules={[
