@@ -29,10 +29,10 @@ const Sidebar = () => {
         </Menu.SubMenu>
         <Menu.SubMenu key='user' icon={<AppstoreOutlined />} title='User'>
           <Menu.Item key='5'>
-            <Link to='/add-user'>Add User</Link>
+            <Link to='/user/add'>Add User</Link>
           </Menu.Item>
           <Menu.Item key='6'>
-            <Link to='/view-user'>View User</Link>
+            <Link to='/user'>View User</Link>
           </Menu.Item>
         </Menu.SubMenu>
         <Menu.SubMenu key='profile' icon={<AppstoreOutlined />} title='Profile'>
