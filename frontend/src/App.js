@@ -8,6 +8,7 @@ import EditEvent from 'pages/Event/EditEvent';
 import AddUser from 'pages/User/AddUser.page';
 import ViewUsers from 'pages/User/ViewUsers.page';
 import EditUser from 'pages/User/EditUser.page';
+import Profile from 'pages/Profile/Profile';
 const App = () => {
   return (
     <div>
@@ -22,6 +23,8 @@ const App = () => {
         <Route path='/user' element={<ViewUsers />} />
         <Route path='/user/add' element={<AddUser />} />
         <Route path='/user/edit/:id' element={<EditUser />} />
+
+        <Route path='/profile' element={<Profile />} />
       </Routes>
     </div>
   );
