@@ -8,7 +8,7 @@ const AddEvent = () => {
     <Layout>
       <Row justify='space-between'>
         <Col>
-          <Button type='primary'>Add Events</Button>
+          <h2>Add Events</h2>
         </Col>
         <Col>
           <Button type='primary'>View Events</Button>
