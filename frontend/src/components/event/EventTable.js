@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Space, Table } from 'antd';
 import { list } from 'dummy/eventList.data';
 const dataSource = list;
@@ -52,7 +53,9 @@ const columns = [
     render: (id) => (
       <Space>
         <Button onClick={() => console.log(id)}>View</Button>
-        <Button>Edit </Button>
+        <Button>
+          <Link to={`/event/edit/${id}`}>Edit</Link>
+        </Button>
         <Button>Delete</Button>
       </Space>
     ),

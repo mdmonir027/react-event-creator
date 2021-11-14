@@ -14,7 +14,7 @@ const App = () => {
         <Route path='/dashboard' element={<Home />} />
         <Route path='/event/add' element={<AddEvent />} />
         <Route path='/event/view' element={<ViewEvent />} />
-        <Route path='/event/edit' element={<EditEvent />} />
+        <Route path='/event/edit/:id' element={<EditEvent />} />
       </Routes>
     </div>
   );
