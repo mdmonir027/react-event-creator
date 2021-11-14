@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Input } from 'antd';
+import { Row, Col } from 'antd';
 import style from './userInfo.module.css';
 import { FaPencilAlt } from 'react-icons/fa';
 import { AiFillCloseCircle } from 'react-icons/ai';
