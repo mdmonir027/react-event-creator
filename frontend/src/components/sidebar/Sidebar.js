@@ -21,10 +21,10 @@ const Sidebar = () => {
         </Menu.Item>
         <Menu.SubMenu key='Event' icon={<MailOutlined />} title='Event'>
           <Menu.Item key='1'>
-            <Link to='/add-event'>Add Event</Link>
+            <Link to='/event/add'>Add Event</Link>
           </Menu.Item>
           <Menu.Item key='2'>
-            <Link to='/view-events'>View Events</Link>
+            <Link to='/event/view'>View Events</Link>
           </Menu.Item>
         </Menu.SubMenu>
         <Menu.SubMenu key='user' icon={<AppstoreOutlined />} title='User'>

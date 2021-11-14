@@ -1,12 +1,12 @@
 import React from 'react';
 
 import Layout from 'components/layout/Layout';
-const Home = () => {
+const EditEvent = () => {
   return (
     <Layout>
-      <h2>Hello</h2>
+      <h2>Edit Event</h2>
     </Layout>
   );
 };
 
-export default Home;
+export default EditEvent;
