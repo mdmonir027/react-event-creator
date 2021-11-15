@@ -13,6 +13,11 @@ const useStyles = createUseStyles({
     boxShadow: '0px 0px 10px 1px #d3d3d3',
     padding: '10px 0',
     marginBottom: 10,
+    position: ' fixed',
+    width: ' 100%',
+    zIndex: ' 999999',
+    height: ' 65px',
+    background: ' white',
   },
 });
 

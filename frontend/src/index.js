@@ -5,6 +5,7 @@ import App from './App';
 // import store from './store/store';
 import { BrowserRouter } from 'react-router-dom';
 import 'antd/dist/antd.css';
+import './index.css';
 
 ReactDOM.render(
   // <Provider store={store}>

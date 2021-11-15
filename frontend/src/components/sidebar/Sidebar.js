@@ -2,19 +2,30 @@ import React from 'react';
 import { Menu } from 'antd';
 import { AppstoreOutlined, MailOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { createUseStyles } from 'react-jss';
+const useStyles = createUseStyles({
+  menu: {
+    paddingTop: 90,
+    minHeight: '100vh',
+    boxSizing: 'border-box',
+    background: '#D9CCC5',
+    borderRight: 0,
+  },
+});
 
 const Sidebar = () => {
+  const classes = useStyles();
   const handleClick = (e) => {
     console.log('click ', e);
   };
   return (
-    <div>
+    <div className='bg-grey-red'>
       <Menu
         onClick={handleClick}
-        style={{ width: 256 }}
         defaultSelectedKeys={[]}
         defaultOpenKeys={[]}
         mode='inline'
+        className={classes.menu}
       >
         <Menu.Item>
           <Link to='/dashboard'>Dashboard</Link>
