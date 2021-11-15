@@ -12,6 +12,12 @@ import {
 import { UserOutlined } from '@ant-design/icons';
 import { createUseStyles } from 'react-jss';
 import axios from 'axios';
+import { FaMapMarkerAlt, FaMapMarked, FaCity } from 'react-icons/fa';
+import {
+  AiOutlineDollar,
+  AiOutlineGlobal,
+  AiOutlineLink,
+} from 'react-icons/ai';
 
 const useStyles = createUseStyles({
   form: {},
@@ -57,22 +63,45 @@ const EventForm = () => {
     <div>
       <div className={classes.formWrapper}>
         <Form name='normal_login' className={classes.form} onFinish={onFinish}>
-          <Form.Item
-            name='name'
-            rules={[
-              {
-                required: true,
-                message: 'Name is required!',
-              },
-            ]}
-            key='name'
-          >
-            <Input
-              prefix={<UserOutlined />}
-              type='text'
-              placeholder='Enter Event name'
-            />
-          </Form.Item>
+          <Row gutter={10}>
+            <Col span={16}>
+              <Form.Item
+                name='name'
+                rules={[
+                  {
+                    required: true,
+                    message: 'Name is required!',
+                  },
+                ]}
+                key='name'
+              >
+                <Input
+                  prefix={<UserOutlined />}
+                  type='text'
+                  placeholder='Enter Event name'
+                />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                name='price'
+                rules={[
+                  {
+                    required: true,
+                    message: 'Price is required!',
+                  },
+                ]}
+                key='price'
+              >
+                <Input
+                  prefix={<AiOutlineDollar />}
+                  type='text'
+                  placeholder='Enter Event price'
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
           <Typography.Text>Event location</Typography.Text>
           <Row gutter={20} style={{ marginTop: 10 }}>
             <Col span={12}>
@@ -87,7 +116,7 @@ const EventForm = () => {
                 key='address'
               >
                 <Input
-                  prefix={<UserOutlined />}
+                  prefix={<FaMapMarkerAlt />}
                   type='text'
                   placeholder='Enter Event address'
                 />
@@ -105,7 +134,7 @@ const EventForm = () => {
                 key='coordinates'
               >
                 <Input
-                  prefix={<UserOutlined />}
+                  prefix={<FaMapMarked />}
                   type='text'
                   placeholder='Enter Event coordinates'
                 />
@@ -123,7 +152,7 @@ const EventForm = () => {
                 key='city'
               >
                 <Input
-                  prefix={<UserOutlined />}
+                  prefix={<FaCity />}
                   type='text'
                   placeholder='Enter event city'
                 />
@@ -131,6 +160,7 @@ const EventForm = () => {
             </Col>
             <Col span={12}>
               <Select
+                prefix={<AiOutlineGlobal />}
                 key='country'
                 showSearch
                 style={{ width: '100%' }}
@@ -262,7 +292,11 @@ const EventForm = () => {
                   },
                 ]}
               >
-                <Input style={{ width: '100%' }} placeholder='Source Url' />
+                <Input
+                  style={{ width: '100%' }}
+                  placeholder='Source Url'
+                  prefix={<AiOutlineLink />}
+                />
               </Form.Item>
             </Col>
           </Row>

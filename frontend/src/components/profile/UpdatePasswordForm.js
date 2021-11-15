@@ -1,4 +1,4 @@
-import { Form, Button, Input } from 'antd';
+import { Form, Button, Input, Row, Col } from 'antd';
 import { AiFillLock } from 'react-icons/ai';
 import React from 'react';
 
@@ -9,38 +9,45 @@ const UpdatePasswordForm = () => {
   return (
     <div>
       <Form name='normal_login' onFinish={onFinish}>
-        <Form.Item
-          name='old-password'
-          rules={[
-            {
-              required: true,
-              message: 'Old password is required!',
-            },
-          ]}
-          key='old-password'
-        >
-          <Input
-            prefix={<AiFillLock />}
-            type='text'
-            placeholder='Old Password'
-          />
-        </Form.Item>
-        <Form.Item
-          name='new-password'
-          rules={[
-            {
-              required: true,
-              message: 'New password is required!',
-            },
-          ]}
-          key='new-password'
-        >
-          <Input
-            prefix={<AiFillLock />}
-            type='text'
-            placeholder='New Password'
-          />
-        </Form.Item>
+        <Row gutter={10}>
+          <Col span={12}>
+            <Form.Item
+              name='old-password'
+              rules={[
+                {
+                  required: true,
+                  message: 'Old password is required!',
+                },
+              ]}
+              key='old-password'
+            >
+              <Input
+                prefix={<AiFillLock />}
+                type='text'
+                placeholder='Old Password'
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='new-password'
+              rules={[
+                {
+                  required: true,
+                  message: 'New password is required!',
+                },
+              ]}
+              key='new-password'
+            >
+              <Input
+                prefix={<AiFillLock />}
+                type='text'
+                placeholder='New Password'
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Form.Item
           name='confirm-password'
           rules={[

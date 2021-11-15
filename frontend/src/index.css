@@ -11,3 +11,6 @@ body {
 .bg-grey-red {
   background: #d9ccc5 !important;
 }
+.table-wrapper {
+  overflow-x: scroll;
+}

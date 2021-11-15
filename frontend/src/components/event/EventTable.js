@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Space, Table } from 'antd';
 import { list } from 'dummy/eventList.data';
+import { FaEye, FaPen, FaTrashAlt } from 'react-icons/fa';
 const dataSource = list;
-
 const columns = [
   {
     title: 'Name',
@@ -52,18 +52,24 @@ const columns = [
     key: 'action',
     render: (id) => (
       <Space>
-        <Button onClick={() => console.log(id)}>View</Button>
-        <Button>
-          <Link to={`/event/edit/${id}`}>Edit</Link>
+        <Button onClick={() => console.log(id)}>
+          <FaEye />
         </Button>
-        <Button>Delete</Button>
+        <Button>
+          <Link to={`/event/edit/${id}`}>
+            <FaPen />
+          </Link>
+        </Button>
+        <Button>
+          <FaTrashAlt />
+        </Button>
       </Space>
     ),
   },
 ];
 const EventTable = () => {
   return (
-    <div>
+    <div className='table-wrapper'>
       <Table dataSource={dataSource} columns={columns} />
     </div>
   );
