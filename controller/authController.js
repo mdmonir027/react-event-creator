@@ -62,6 +62,8 @@ const controller = {
         JWT_TOKEN_SECRET
       );
 
+      await User.update({ last_login: new Date() }, { where: { login } });
+
       return res.status(200).json({
         message: 'Login was successful',
         token: `Bearer ${token}`,
