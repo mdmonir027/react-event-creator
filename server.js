@@ -4,8 +4,7 @@ const db = require('./config/database');
 
 const app = express();
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+require('./middleware/setMiddleware')(app);
 
 app.get('/', (req, res) => {
   return res.status(200).json({
