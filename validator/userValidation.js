@@ -32,6 +32,10 @@ const validator = {
       })
       .normalizeEmail(),
   ],
+  userLoginValidator: [
+    body('login').not().isEmpty().withMessage('Login is required!'),
+    body('password').not().isEmpty().withMessage('Password is required!'),
+  ],
 };
 
 module.exports = validator;
