@@ -1,9 +1,14 @@
 const authRoutes = require('./authRoutes');
+const eventRoutes = require('./eventRoutes');
 
 const routes = [
   {
     path: '/auth',
     handler: authRoutes,
+  },
+  {
+    path: '/event',
+    handler: eventRoutes,
   },
   {
     path: '/',

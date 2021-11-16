@@ -22,9 +22,6 @@ const userSchema = {
     type: DataTypes.STRING,
     defaultValue: 'u',
   },
-  date_added: {
-    type: DataTypes.TIME,
-  },
 };
 
 const User = db.define('user', userSchema);
