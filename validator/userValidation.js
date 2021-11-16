@@ -6,9 +6,20 @@ const validator = {
       .not()
       .isEmpty()
       .withMessage('Please enter a name')
-      .isLength({ min: 6, max: 50 })
-      .withMessage('Please enter a name between 6 to 50 chars')
+      .isLength({ min: 4, max: 50 })
+      .withMessage('Please enter a name between 4 to 50 chars')
       .trim(),
+    body('login')
+      .not()
+      .isEmpty()
+      .withMessage('Please enter a username')
+      .custom(async (login) => {
+        const userData = await User.findOne({ where: { login } });
+        if (userData) {
+          throw new Error('Username is already exists!');
+        }
+        return true;
+      }),
     body('email')
       .isEmail()
       .withMessage('Please enter a valid email address')

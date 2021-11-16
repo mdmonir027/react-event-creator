@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const db = require('./config/database');
-const moment = require('moment');
 
 const app = express();
 
@@ -15,7 +14,6 @@ db.authenticate()
   .catch((e) => {
     console.log('Database connection failed!', e);
   });
-console.log(moment());
 
 const PORT = process.env.PORT || 9000;
 
