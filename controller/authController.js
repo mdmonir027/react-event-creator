@@ -22,7 +22,6 @@ const controller = {
         password: hashPassword,
         email,
         user_type: 'u',
-        date_added: new Date(),
         last_login: new Date(),
       };
 
