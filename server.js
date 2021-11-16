@@ -5,12 +5,7 @@ const db = require('./config/database');
 const app = express();
 
 require('./middleware/setMiddleware')(app);
-
-app.get('/', (req, res) => {
-  return res.status(200).json({
-    message: 'ok',
-  });
-});
+require('./routes/setRoutes')(app);
 
 db.authenticate()
   .then(() => {
