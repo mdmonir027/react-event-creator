@@ -1,5 +1,6 @@
+require('dotenv').config();
 const express = require('express');
-require('dot-env')();
+const db = require('./config/database');
 
 const app = express();
 
@@ -8,9 +9,17 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   return res.status(200).json({
-    message: ok,
+    message: 'ok',
   });
 });
+
+db.authenticate()
+  .then(() => {
+    console.log('Database connected successfully');
+  })
+  .catch((e) => {
+    console.log('Database connection failed!', e);
+  });
 
 const PORT = process.env.PORT || 9000;
 
