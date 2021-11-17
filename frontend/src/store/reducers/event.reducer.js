@@ -24,6 +24,15 @@ const eventReducer = (state = init, action) => {
         errors,
       };
     }
+    case types.SET_ALL_EVENTS: {
+      const { events } = action.payload;
+      return {
+        ...state,
+        events,
+        errorType: '',
+        errors: {},
+      };
+    }
     default:
       return state;
   }

@@ -27,3 +27,25 @@ export const eventAdd = (values, cb) => async (dispatch) => {
     cb(false);
   }
 };
+
+export const fetchAllEvents = () => async (dispatch) => {
+  try {
+    const res = await axios.get('/event');
+
+    dispatch({
+      type: types.SET_ALL_EVENTS,
+      payload: {
+        events: res.data,
+      },
+    });
+  } catch (e) {
+    console.log(e?.response.data);
+    dispatch({
+      type: types.SET_EVENT_ERROR,
+      payload: {
+        errors: e?.response?.data,
+        errorType: 'all',
+      },
+    });
+  }
+};

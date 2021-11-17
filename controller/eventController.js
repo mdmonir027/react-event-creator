@@ -47,6 +47,14 @@ const controller = {
       internalServerError(res, e);
     }
   },
+  getAll: async (req, res) => {
+    try {
+      const data = await Event.findAll();
+      return res.status(200).json(data);
+    } catch (e) {
+      internalServerError(res, e);
+    }
+  },
 };
 
 module.exports = controller;
