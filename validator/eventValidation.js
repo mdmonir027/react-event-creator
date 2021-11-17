@@ -17,26 +17,12 @@ const validation = {
       .isEmpty()
       .withMessage('Event description is required!'),
 
-    body('coordinates').custom((coordinates) => {
-      if (!coordinates) {
-        return true;
-      }
-      const [lat, lng] = coordinates.split(',');
-      let pattern = new RegExp('^-?([1-8]?[1-9]|[1-9]0)\\.{1}\\d{1,6}');
-
-      const result = pattern.test(lat) && pattern.test(lng);
-      if (!result) {
-        throw new Error('Coordinates must be valid!');
-      }
-      return true;
-    }),
-
     body('date_from')
       .not()
       .isEmpty()
       .withMessage('Event date from is required!'),
-
-    body('time').not().isEmpty().withMessage('Time is required!'),
+    body('time_from').not().isEmpty().withMessage('Time is is required!'),
+    body('date_to').not().isEmpty().withMessage('Time is is required!'),
     body('source_url').not().isEmpty().withMessage('Source URL is required!'),
   ],
 };

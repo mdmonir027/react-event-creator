@@ -4,7 +4,13 @@ import React from 'react';
 import Layout from 'components/layout/Layout';
 import { Button, Col, Row } from 'antd';
 import { Link } from 'react-router-dom';
-const AddEvent = () => {
+import { connect } from 'react-redux';
+import { Navigate } from 'react-router-dom';
+
+const AddEvent = ({ user }) => {
+  if (!Object.keys(user).length > 0) {
+    return <Navigate to='/' />;
+  }
   return (
     <Layout>
       <Row justify='space-between'>
@@ -22,4 +28,7 @@ const AddEvent = () => {
   );
 };
 
-export default AddEvent;
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
+});
+export default connect(mapStateToProps)(AddEvent);

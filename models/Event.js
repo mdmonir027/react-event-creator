@@ -37,15 +37,18 @@ const eventSchema = {
     type: DataTypes.INTEGER,
   },
   date_from: {
-    type: DataTypes.TIME,
+    type: DataTypes.STRING,
   },
   date_to: {
-    type: DataTypes.TIME,
+    type: DataTypes.STRING,
     default: null,
     allowNull: true,
   },
-  time: {
-    type: DataTypes.TIME,
+  time_from: {
+    type: DataTypes.STRING,
+  },
+  time_to: {
+    type: DataTypes.STRING,
   },
   source_url: {
     type: DataTypes.STRING,

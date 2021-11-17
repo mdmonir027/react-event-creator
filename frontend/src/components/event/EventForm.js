@@ -8,16 +8,17 @@ import {
   Select,
   Typography,
   DatePicker,
+  TimePicker,
 } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { createUseStyles } from 'react-jss';
 import axios from 'axios';
 import { FaMapMarkerAlt, FaMapMarked, FaCity } from 'react-icons/fa';
-import {
-  AiOutlineDollar,
-  AiOutlineGlobal,
-  AiOutlineLink,
-} from 'react-icons/ai';
+import { AiOutlineDollar, AiOutlineLink } from 'react-icons/ai';
+import { validationLatitudeLongitude } from 'validation-latitude-longitude';
+import moment from 'moment';
+import { eventAdd } from 'store/action/event.action';
+import { connect } from 'react-redux';
 
 const useStyles = createUseStyles({
   form: {},
@@ -26,10 +27,51 @@ const useStyles = createUseStyles({
     marginTop: 20,
   },
 });
-const EventForm = () => {
+
+const timeZoneList = [
+  'UTC+14:00',
+  'UTC+13:00',
+  'UTC+12:45',
+  'UTC+12:00',
+  'UTC+11:00',
+  'UTC+10:30',
+  'UTC+10:00',
+  'UTC+09:30',
+  'UTC+09:00',
+  'UTC+08:45',
+  'UTC+07:00',
+  'UTC+06:30',
+  'UTC+06:00',
+  'UTC+05:45',
+  'UTC+05:30',
+  'UTC+04:30',
+  'UTC+04:00',
+  'UTC+03.30',
+  'UTC+03:00',
+  'UTC+02:00',
+  'UTC+01:00',
+  'UTC+00:00',
+  'UTC-01:00',
+  'UTC-02:00',
+  'UTC-03:00',
+  'UTC-03.30',
+  'UTC-04:00',
+  'UTC-05:00',
+  'UTC-06:00',
+  'UTC-07:00',
+  'UTC-08:00',
+  'UTC-09:00',
+  'UTC-09.30',
+  'UTC-10:00',
+  'UTC-11:00',
+  'UTC-12:00',
+];
+
+const EventForm = ({ eventAdd }) => {
   const classes = useStyles();
   const [countryList, setCountryList] = useState([]);
-  const [timezoneList, setTimezoneList] = useState([]);
+  const [country, setCountry] = useState('');
+  const [form] = Form.useForm();
 
   useEffect(() => {
     axios
@@ -38,34 +80,31 @@ const EventForm = () => {
         const list = res.data;
         const countries = list.map((country) => country.name.common);
         setCountryList(countries);
-        const timeZoneList = res.data.map((country) => {
-          return country.timezones;
-        });
-
-        const timezoneUnique = [...new Set(timeZoneList.flat(Infinity))]
-          .sort((a, b) => {
-            if (a > b) return -1;
-            if (a < b) return 1;
-            return 0;
-          })
-          .filter((item) => item !== 'UTC');
-
-        setTimezoneList(timezoneUnique);
       })
       .catch((e) => console.log(e));
   }, []);
 
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+    eventAdd({ ...values, country }, (result) => {
+      if (result) {
+        form.resetFields();
+      }
+    });
   };
 
   return (
     <div>
       <div className={classes.formWrapper}>
-        <Form name='normal_login' className={classes.form} onFinish={onFinish}>
+        <Form
+          name='normal_login'
+          className={classes.form}
+          onFinish={onFinish}
+          form={form}
+        >
           <Row gutter={10}>
             <Col span={16}>
               <Form.Item
+                hasFeedback
                 name='name'
                 rules={[
                   {
@@ -83,16 +122,7 @@ const EventForm = () => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item
-                name='price'
-                rules={[
-                  {
-                    required: true,
-                    message: 'Price is required!',
-                  },
-                ]}
-                key='price'
-              >
+              <Form.Item hasFeedback name='ticket_price' key='ticket_price'>
                 <Input
                   prefix={<AiOutlineDollar />}
                   type='text'
@@ -105,16 +135,7 @@ const EventForm = () => {
           <Typography.Text>Event location</Typography.Text>
           <Row gutter={20} style={{ marginTop: 10 }}>
             <Col span={12}>
-              <Form.Item
-                name='address'
-                rules={[
-                  {
-                    required: true,
-                    message: 'Address is required',
-                  },
-                ]}
-                key='address'
-              >
+              <Form.Item hasFeedback name='address' key='address'>
                 <Input
                   prefix={<FaMapMarkerAlt />}
                   type='text'
@@ -124,12 +145,25 @@ const EventForm = () => {
             </Col>
             <Col span={12}>
               <Form.Item
+                hasFeedback
                 name='coordinates'
                 rules={[
-                  {
-                    required: true,
-                    message: 'Coordinates is required!',
-                  },
+                  () => ({
+                    validator(_, value) {
+                      if (value) {
+                        const [lat, lng] = value.trim().split(',');
+                        const result = validationLatitudeLongitude.latLong(
+                          lat,
+                          lng
+                        );
+                        if (result) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject('Invalid Coordinates');
+                      }
+                      return Promise.resolve();
+                    },
+                  }),
                 ]}
                 key='coordinates'
               >
@@ -141,16 +175,7 @@ const EventForm = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item
-                name='city'
-                rules={[
-                  {
-                    required: true,
-                    message: 'City is required',
-                  },
-                ]}
-                key='city'
-              >
+              <Form.Item hasFeedback name='city' key='city'>
                 <Input
                   prefix={<FaCity />}
                   type='text'
@@ -160,7 +185,6 @@ const EventForm = () => {
             </Col>
             <Col span={12}>
               <Select
-                prefix={<AiOutlineGlobal />}
                 key='country'
                 showSearch
                 style={{ width: '100%' }}
@@ -171,6 +195,7 @@ const EventForm = () => {
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >=
                   0
                 }
+                onChange={(value) => setCountry(value)}
               >
                 {countryList.map((country) => (
                   <Select.Option value={country} key={country}>
@@ -184,12 +209,23 @@ const EventForm = () => {
           <Row gutter={20} style={{ marginTop: 10 }}>
             <Col span={12}>
               <Form.Item
+                dependencies={['date_to']}
+                hasFeedback
                 name='date_from'
                 rules={[
                   {
                     required: true,
                     message: 'Event date required!',
                   },
+                  () => ({
+                    validator(_, value) {
+                      const result = moment(value).diff(moment().toDate()) > 0;
+                      if (result) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject('Date must be in future date');
+                    },
+                  }),
                 ]}
                 key='date_from'
               >
@@ -201,6 +237,8 @@ const EventForm = () => {
             </Col>
             <Col span={12}>
               <Form.Item
+                dependencies={['date_from']}
+                hasFeedback
                 key='date_to'
                 name='date_to'
                 rules={[
@@ -208,6 +246,20 @@ const EventForm = () => {
                     required: true,
                     message: 'Event date required!',
                   },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      const result =
+                        moment(value).diff(
+                          moment(getFieldValue.date_from).toDate()
+                        ) > 0;
+                      if (result) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        'Date must be greater than date from'
+                      );
+                    },
+                  }),
                 ]}
               >
                 <DatePicker
@@ -218,16 +270,17 @@ const EventForm = () => {
             </Col>
             <Col span={12}>
               <Form.Item
+                hasFeedback
                 name='time_from'
+                key='time_from'
                 rules={[
                   {
                     required: true,
-                    message: 'Event time is required!',
+                    message: 'Time is required!',
                   },
                 ]}
-                key='time_from'
               >
-                <DatePicker
+                <TimePicker
                   style={{ width: '100%' }}
                   placeholder='Event time from'
                 />
@@ -235,16 +288,17 @@ const EventForm = () => {
             </Col>
             <Col span={12}>
               <Form.Item
+                hasFeedback
                 name='time_to'
+                key='time_to'
                 rules={[
                   {
                     required: true,
-                    message: 'Event time is required!',
+                    message: 'Time is required!',
                   },
                 ]}
-                key='time_to'
               >
-                <DatePicker
+                <TimePicker
                   style={{ width: '100%' }}
                   placeholder='Event time to'
                 />
@@ -252,6 +306,7 @@ const EventForm = () => {
             </Col>
             <Col span={12}>
               <Form.Item
+                hasFeedback
                 name='timezone'
                 rules={[
                   {
@@ -272,8 +327,9 @@ const EventForm = () => {
                       .toLowerCase()
                       .indexOf(input.toLowerCase()) >= 0
                   }
+                  hasFeedback
                 >
-                  {timezoneList.map((value) => (
+                  {timeZoneList.map((value) => (
                     <Select.Option value={value} key={value}>
                       {value}
                     </Select.Option>
@@ -283,6 +339,7 @@ const EventForm = () => {
             </Col>
             <Col span={12}>
               <Form.Item
+                hasFeedback
                 key='source_url'
                 name='source_url'
                 rules={[
@@ -290,17 +347,23 @@ const EventForm = () => {
                     required: true,
                     message: 'Source url is required!',
                   },
+                  {
+                    type: 'url',
+                    message: 'It must be valid url',
+                  },
                 ]}
               >
                 <Input
                   style={{ width: '100%' }}
                   placeholder='Source Url'
                   prefix={<AiOutlineLink />}
+                  type='url'
                 />
               </Form.Item>
             </Col>
           </Row>
           <Form.Item
+            hasFeedback
             name='description'
             rules={[
               {
@@ -318,7 +381,7 @@ const EventForm = () => {
             />
           </Form.Item>
 
-          <Form.Item>
+          <Form.Item hasFeedback>
             <Button type='primary' htmlType='submit' className={classes.button}>
               Add Event
             </Button>
@@ -328,5 +391,10 @@ const EventForm = () => {
     </div>
   );
 };
+const mapStateToProps = (state) => ({
+  errors: state.event.errors,
+  errorType: state.event.errorType,
+});
 
-export default EventForm;
+const actions = { eventAdd };
+export default connect(mapStateToProps, actions)(EventForm);
