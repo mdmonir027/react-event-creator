@@ -5,7 +5,7 @@ const userSchema = {
   name: {
     type: DataTypes.STRING,
   },
-  login: {
+  username: {
     type: DataTypes.STRING,
   },
   password: {

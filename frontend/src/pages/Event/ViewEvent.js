@@ -4,8 +4,13 @@ import Layout from 'components/layout/Layout';
 import EventTable from 'components/event/EventTable';
 import { Button, Col, Row } from 'antd';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 
-const ViewEvent = () => {
+const ViewEvent = ({ user }) => {
+  if (!Object.keys(user).length > 0) {
+    return <Navigate to='/' />;
+  }
   return (
     <Layout>
       <Row justify='space-between'>
@@ -23,4 +28,7 @@ const ViewEvent = () => {
   );
 };
 
-export default ViewEvent;
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
+});
+export default connect(mapStateToProps)(ViewEvent);

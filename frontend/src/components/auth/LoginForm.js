@@ -1,7 +1,9 @@
 import React from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Typography, Space } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { createUseStyles } from 'react-jss';
+import { connect } from 'react-redux';
+import { loginAction } from 'store/action/auth.action';
 
 const useStyles = createUseStyles({
   form: {
@@ -15,13 +17,19 @@ const useStyles = createUseStyles({
   },
 });
 
-const LoginForm = () => {
+const LoginForm = ({ loginAction, errors }) => {
   const classes = useStyles();
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+    loginAction(values);
   };
   return (
     <Form name='normal_login' className={classes.form} onFinish={onFinish}>
+      <Space direction='vertical' style={{ marginBottom: 10 }}>
+        {Object.keys(errors).length > 0 &&
+          Object.values(errors).map((value) => (
+            <Typography.Text type='danger'>{value}</Typography.Text>
+          ))}
+      </Space>
       <Form.Item
         name='username'
         rules={[
@@ -43,7 +51,7 @@ const LoginForm = () => {
           },
         ]}
       >
-        <Input
+        <Input.Password
           prefix={<LockOutlined />}
           type='password'
           placeholder='Password'
@@ -65,4 +73,9 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+const mapStateToProps = (state) => ({
+  errors: state.auth.errors,
+});
+const functions = { loginAction };
+
+export default connect(mapStateToProps, functions)(LoginForm);

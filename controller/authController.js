@@ -35,10 +35,10 @@ const controller = {
   login: async (req, res) => {
     const { JWT_TOKEN_SECRET } = process.env;
     try {
-      const { login, password } = req.body;
-      const user = await User.findOne({ where: { login } });
+      const { username, password } = req.body;
+      const user = await User.findOne({ where: { username } });
       const errorResponseMessage = {
-        login: 'Invalid Credentials',
+        username: 'Invalid Credentials',
         email: 'Invalid Credentials',
       };
       if (!user) {
@@ -53,6 +53,7 @@ const controller = {
       const token = jwt.sign(
         {
           email: user.email,
+          username: user.username,
           login: user.login,
           iat: new Date().getTime(),
           exp: Date.now() + 1000 * 60 * 60 * 2,
@@ -61,7 +62,7 @@ const controller = {
         JWT_TOKEN_SECRET
       );
 
-      await User.update({ last_login: new Date() }, { where: { login } });
+      await User.update({ last_login: new Date() }, { where: { username } });
 
       return res.status(200).json({
         message: 'Login was successful',
