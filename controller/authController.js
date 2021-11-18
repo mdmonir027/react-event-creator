@@ -6,32 +6,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const controller = {
-  register: async (req, res) => {
-    const { SALT_ROUND } = process.env;
-    try {
-      const { name, login, email } = req.body;
-      const generatedPassword = generate();
-      console.log({ generatedPassword });
-
-      const salt = await bcrypt.genSalt(parseInt(SALT_ROUND));
-      const hashPassword = await bcrypt.hash(generatedPassword, salt);
-
-      const data = {
-        name,
-        login,
-        password: hashPassword,
-        email,
-        user_type: 'u',
-        last_login: new Date(),
-      };
-
-      const user = await User.create(data);
-
-      return res.status(200).json(user);
-    } catch (e) {
-      internalServerError(res, e);
-    }
-  },
   login: async (req, res) => {
     const { JWT_TOKEN_SECRET } = process.env;
     try {
