@@ -1,6 +1,8 @@
 import { Button, Space, Table } from 'antd';
+import moment from 'moment';
 import React from 'react';
-import { users } from 'dummy/users.data';
+
+import { connect } from 'react-redux';
 
 const columns = [
   {
@@ -20,13 +22,15 @@ const columns = [
   },
   {
     title: 'Date Added',
-    dataIndex: 'date_added',
-    key: 'date_added',
+    dataIndex: 'createdAt',
+    key: 'createdAt',
+    render: (value) => moment(value).format('D-MMM-YYYY  h:mm a'),
   },
   {
     title: 'Last Login',
     dataIndex: 'last_login',
     key: 'last_login',
+    render: (value) => moment(value).format('D-MMM-YYYY  h:mm a'),
   },
   {
     title: 'Action',
@@ -39,7 +43,7 @@ const columns = [
     ),
   },
 ];
-const UserTable = () => {
+const UserTable = ({ users }) => {
   //   console.log(users);
   return (
     <div>
@@ -48,4 +52,9 @@ const UserTable = () => {
   );
 };
 
-export default UserTable;
+const mapStateToProps = (state) => {
+  const { users } = state.user;
+  return { users };
+};
+
+export default connect(mapStateToProps)(UserTable);

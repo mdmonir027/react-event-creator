@@ -8,15 +8,15 @@ const init = {
 
 const userReducer = (state = init, action) => {
   switch (action.type) {
-    // case types.SET_USERS: {
-    //   const { users } = action.payload;
-    //   return {
-    //     ...state,
-    //     users,
-    //     errors: {},
-    //     type: '',
-    //   };
-    // }
+    case types.SET_ALL_USERS: {
+      const { users } = action.payload;
+      return {
+        ...state,
+        users,
+        errors: {},
+        type: '',
+      };
+    }
     case types.ADD_USER: {
       const { user } = action.payload;
       const users = [...state.users, user];

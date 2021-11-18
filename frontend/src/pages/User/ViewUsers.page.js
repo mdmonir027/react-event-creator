@@ -1,9 +1,14 @@
 import { Button, Col, Row } from 'antd';
 import Layout from 'components/layout/Layout';
 import UserTable from 'components/user/UserTable';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-const ViewUsers = () => {
+import { getAllUser } from 'store/action/user.action';
+
+const ViewUsers = ({ getAllUser }) => {
+  useEffect(() => getAllUser(), [getAllUser]);
   return (
     <Layout>
       <Row justify='space-between'>
@@ -11,7 +16,9 @@ const ViewUsers = () => {
           <h2>All User</h2>
         </Col>
         <Col>
-          <Button type='primary'>Add User</Button>
+          <Button type='primary'>
+            <Link to='/user/add'>Add User</Link>
+          </Button>
         </Col>
       </Row>
       <UserTable />
@@ -19,4 +26,4 @@ const ViewUsers = () => {
   );
 };
 
-export default ViewUsers;
+export default connect(null, { getAllUser })(ViewUsers);

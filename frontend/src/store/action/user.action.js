@@ -27,3 +27,25 @@ export const addUser = (values, cb) => async (dispatch) => {
     cb(false);
   }
 };
+
+export const getAllUser = () => async (dispatch) => {
+  try {
+    const res = await axios.get('/user');
+    const users = res.data;
+    dispatch({
+      type: types.SET_ALL_USERS,
+      payload: {
+        users,
+      },
+    });
+  } catch (e) {
+    console.log(e);
+    dispatch({
+      type: types.SET_USER_ERROR,
+      payload: {
+        errors: e?.response?.data,
+        type: 'add',
+      },
+    });
+  }
+};
