@@ -64,6 +64,10 @@ const eventSchema = {
   created_by: {
     type: DataTypes.INTEGER,
   },
+  isDeleted: {
+    type: DataTypes.BOOLEAN,
+    default: 0,
+  },
 };
 
 const Event = db.define('events', eventSchema);

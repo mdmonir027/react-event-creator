@@ -50,13 +50,17 @@ const controller = {
   },
   getAll: async (req, res) => {
     try {
-      const { admin } = req.query;
-      console.log(req.query);
       let data;
-      if (admin === 'true') {
-        data = await Event.findAll();
+      if (req.user.user_type === 'A') {
+        data = await Event.findAll({
+          where: { isDeleted: 0 },
+          attributes: { exclude: ['isDeleted', 'updatedAt'] },
+        });
       } else {
-        data = await Event.findAll({ where: { created_by: req.user.id } });
+        data = await Event.findAll({
+          where: { created_by: req.user.id, isDeleted: 0 },
+          attributes: { exclude: ['isDeleted', 'updatedAt'] },
+        });
       }
       return res.status(200).json(data);
     } catch (e) {
@@ -66,7 +70,10 @@ const controller = {
   find: async (req, res) => {
     try {
       const { id } = req.params;
-      const event = await Event.findByPk(id);
+      const event = await Event.findOne({
+        where: { id, isDeleted: false },
+        attributes: { exclude: ['isDeleted', 'updatedAt'] },
+      });
 
       if (req.user.user_type !== 'A' && event.created_by !== req.user.id) {
         return res.status(401).json({
@@ -152,7 +159,7 @@ const controller = {
         });
       }
 
-      await Event.destroy({ where: { id } });
+      await Event.update({ isDeleted: 1 }, { where: { id } });
       return res.status(200).json({ message: 'Event deleted successfully!' });
     } catch (e) {
       internalServerError(res, e);

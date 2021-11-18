@@ -1,7 +1,7 @@
 import * as types from './actionTypes';
 import axios from 'axios';
 import { getToken } from 'utils/token';
-import { message } from 'antd';
+
 axios.defaults.headers.common['Authorization'] = getToken();
 
 export const addUser = (values, cb) => async (dispatch) => {
