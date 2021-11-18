@@ -120,6 +120,16 @@ const controller = {
       internalServerError(res, e);
     }
   },
+  remove: async (req, res) => {
+    try {
+      const { id } = req.params;
+      await Event.destroy({ where: { id } });
+
+      return res.status(200).json({ message: 'Event deleted successfully!' });
+    } catch (e) {
+      internalServerError(res, e);
+    }
+  },
 };
 
 module.exports = controller;

@@ -95,3 +95,26 @@ export const eventUpdate = (values, id, cb) => async (dispatch) => {
     cb(false);
   }
 };
+
+export const deleteEvent = (id) => async (dispatch) => {
+  try {
+    console.log('delete event ', id);
+    const res = await axios.delete(`/event/${id}`);
+    console.log(res.data);
+
+    dispatch({
+      type: types.DELETE_EVENT,
+      payload: {
+        id,
+      },
+    });
+  } catch (e) {
+    dispatch({
+      type: types.SET_EVENT_ERROR,
+      payload: {
+        errors: e?.response?.data,
+        errorType: 'e',
+      },
+    });
+  }
+};

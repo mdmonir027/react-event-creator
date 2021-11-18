@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Space, Table } from 'antd';
+import { Button, Popconfirm, Space, Table } from 'antd';
 
 import { FaPen, FaTrashAlt } from 'react-icons/fa';
 import { connect } from 'react-redux';
 import { sliceString } from 'utils/stringHelper';
 import moment from 'moment';
+import { deleteEvent } from 'store/action/event.action';
 
 const columns = [
   {
@@ -56,21 +57,32 @@ const columns = [
     title: 'Action',
     dataIndex: 'id',
     key: 'action',
-    render: (id) => (
-      <Space>
-        <Button>
-          <Link to={`/event/edit/${id}`}>
-            <FaPen />
-          </Link>
-        </Button>
-        <Button>
-          <FaTrashAlt />
-        </Button>
-      </Space>
-    ),
+    render: (id, { deleteEvent }) => {
+      return (
+        <Space>
+          <Button>
+            <Link to={`/event/edit/${id}`}>
+              <FaPen />
+            </Link>
+          </Button>
+          <Popconfirm
+            title='Are you want to delete this event？'
+            icon={<FaTrashAlt style={{ color: 'red' }} />}
+            onConfirm={() => deleteEvent(id)}
+            okText='Yes'
+            cancelText='No'
+          >
+            <Button>
+              <FaTrashAlt />
+            </Button>
+          </Popconfirm>
+          ,
+        </Space>
+      );
+    },
   },
 ];
-const EventTable = ({ events }) => {
+const EventTable = ({ events, deleteEvent }) => {
   const dataSource = events?.map((event) => {
     const location = `${event.address || ' '} ${event.city || ' '} ${
       event.country || ' '
@@ -88,17 +100,18 @@ const EventTable = ({ events }) => {
     const time = `${time_from} - ${time_to}`;
 
     const data = { ...event, location, date, time };
+    data.deleteEvent = deleteEvent;
 
     return data;
   });
 
   return (
     <div className='table-wrapper'>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={dataSource} columns={columns} rowKey='id' />
     </div>
   );
 };
 const mapStateToProps = (state) => ({
   events: state.event.events,
 });
-export default connect(mapStateToProps)(EventTable);
+export default connect(mapStateToProps, { deleteEvent })(EventTable);

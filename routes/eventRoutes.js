@@ -6,6 +6,7 @@ const {
   getAll,
   find,
   update,
+  remove,
 } = require('../controller/eventController');
 const { validationErrorResponse } = require('../utils/errorResponses');
 const authenticate = require('../middleware/auth/authenticate');
@@ -26,5 +27,6 @@ router.put(
   validationErrorResponse,
   update
 );
+router.delete('/:id', authenticate, remove);
 
 module.exports = router;

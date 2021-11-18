@@ -6,3 +6,4 @@ export const ADD_EVENT = 'ADD_EVENT';
 export const SET_EVENT_ERROR = 'SET_EVENT_ERROR';
 export const SET_EVENT_FOR_EDIT = 'SET_EVENT_FOR_EDIT';
 export const UPDATE_EVENT = 'UPDATE_EVENT';
+export const DELETE_EVENT = 'DELETE_EVENT';
