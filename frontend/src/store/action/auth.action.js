@@ -1,6 +1,6 @@
 import * as types from './actionTypes';
 import axios from 'axios';
-import { storeToken, getTokenData } from 'utils/token';
+import { storeToken, getTokenData, removeToken } from 'utils/token';
 import { message } from 'antd';
 
 export const loginAction =
@@ -97,4 +97,13 @@ export const updatePassword = (values, cb) => async (dispatch) => {
 
     cb(false);
   }
+};
+
+export const logout = () => (dispatch) => {
+  removeToken();
+  dispatch({
+    type: types.SET_USER,
+    payload: { user: {} },
+  });
+  return true;
 };

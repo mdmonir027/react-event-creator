@@ -3,6 +3,10 @@ import { Menu } from 'antd';
 import { AppstoreOutlined, MailOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { createUseStyles } from 'react-jss';
+import { logout } from 'store/action/auth.action';
+import { useNavigate } from 'react-router-dom';
+import { connect } from 'react-redux';
+
 const useStyles = createUseStyles({
   menu: {
     paddingTop: 90,
@@ -13,23 +17,24 @@ const useStyles = createUseStyles({
   },
 });
 
-const Sidebar = () => {
+const Sidebar = ({ logout }) => {
   const classes = useStyles();
-  const handleClick = (e) => {
-    console.log('click ', e);
+
+  const navigate = useNavigate();
+  const logoutHandler = () => {
+    const result = logout();
+    if (result) {
+      navigate('/');
+    }
   };
   return (
     <div className='bg-grey-red'>
       <Menu
-        onClick={handleClick}
         defaultSelectedKeys={[]}
         defaultOpenKeys={[]}
         mode='inline'
         className={classes.menu}
       >
-        <Menu.Item>
-          <Link to='/dashboard'>Dashboard</Link>
-        </Menu.Item>
         <Menu.SubMenu key='Event' icon={<MailOutlined />} title='Event'>
           <Menu.Item key='1'>
             <Link to='/event/add'>Add Event</Link>
@@ -54,12 +59,12 @@ const Sidebar = () => {
             <Link to='/change-password'>Change Password</Link>
           </Menu.Item>
         </Menu.SubMenu>
-        <Menu.Item key='logout'>
-          <Link to='/log-out'>Log Out</Link>
+        <Menu.Item key='setting:3' onClick={logoutHandler}>
+          Log Out
         </Menu.Item>
       </Menu>
     </div>
   );
 };
 
-export default Sidebar;
+export default connect(null, { logout })(Sidebar);

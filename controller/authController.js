@@ -35,7 +35,10 @@ const controller = {
         JWT_TOKEN_SECRET
       );
 
-      await User.update({ last_login: moment() }, { where: { username } });
+      await User.update(
+        { last_login: moment().format() },
+        { where: { username } }
+      );
 
       return res.status(200).json({
         message: 'Login was successful',

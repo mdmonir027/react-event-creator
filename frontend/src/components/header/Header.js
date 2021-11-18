@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import { findMe } from 'store/action/auth.action';
 import { fetchAllEvents } from 'store/action/event.action';
 import { getAllUser } from 'store/action/user.action';
-
+import { logout } from 'store/action/auth.action';
+import { useNavigate } from 'react-router-dom';
 const useStyles = createUseStyles({
   subMenu: {
     padding: 0,
@@ -25,13 +26,20 @@ const useStyles = createUseStyles({
   },
 });
 
-const Header = ({ findMe, fetchAllEvents, getAllUser }) => {
+const Header = ({ findMe, fetchAllEvents, getAllUser, logout }) => {
   const classes = useStyles();
 
   useEffect(() => findMe(), [findMe]);
   useEffect(() => fetchAllEvents(), [fetchAllEvents]);
   useEffect(() => getAllUser(), [getAllUser]);
 
+  const navigate = useNavigate();
+  const logoutHandler = () => {
+    const result = logout();
+    if (result) {
+      navigate('/');
+    }
+  };
   return (
     <div className={classes.main}>
       <div>
@@ -47,8 +55,8 @@ const Header = ({ findMe, fetchAllEvents, getAllUser }) => {
             <Menu.Item key='setting:2'>
               <Link to='/change-password'>Change Password</Link>
             </Menu.Item>
-            <Menu.Item key='setting:3'>
-              <Link to='/log-out'>Log Out</Link>
+            <Menu.Item key='setting:3' onClick={logoutHandler}>
+              Log Out
             </Menu.Item>
           </Menu.SubMenu>
         </Menu>
@@ -57,4 +65,6 @@ const Header = ({ findMe, fetchAllEvents, getAllUser }) => {
   );
 };
 
-export default connect(null, { findMe, fetchAllEvents, getAllUser })(Header);
+const actions = { findMe, fetchAllEvents, getAllUser, logout };
+
+export default connect(null, actions)(Header);

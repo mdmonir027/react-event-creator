@@ -1,5 +1,7 @@
-export const storeToken = (token, name = 'token') => {
-  localStorage.setItem(name, token);
+const tokenName = 'token';
+
+export const storeToken = (token) => {
+  localStorage.setItem(tokenName, token);
 };
 
 export const getToken = () => {
@@ -14,4 +16,8 @@ export const getTokenData = () => {
   } catch (e) {
     return {};
   }
+};
+
+export const removeToken = () => {
+  localStorage.removeItem(tokenName);
 };
