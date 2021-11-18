@@ -3,6 +3,7 @@ const { internalServerError } = require('../utils/errorResponses');
 const generate = require('../utils/passwordGenerator');
 const bcrypt = require('bcrypt');
 const Event = require('../models/Event');
+const { sendMail } = require('../utils/mail');
 
 const controller = {
   create: async (req, res) => {
@@ -10,7 +11,6 @@ const controller = {
     try {
       const { name, username, email } = req.body;
       const generatedPassword = generate();
-      console.log({ generatedPassword });
 
       const salt = await bcrypt.genSalt(parseInt(SALT_ROUND));
       const hashPassword = await bcrypt.hash(generatedPassword, salt);
@@ -23,7 +23,13 @@ const controller = {
         last_login: new Date(),
       };
 
-      const user = await User.create(userData);
+      const userSave = await User.create(userData);
+
+      sendMail(generatedPassword, req.get('host'), email);
+
+      const user = await User.findByPk(userSave.id, {
+        attributes: { exclude: ['isDeleted', 'updatedAt', 'password'] },
+      });
 
       return res.status(200).json(user);
     } catch (e) {
