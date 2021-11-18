@@ -49,3 +49,49 @@ export const fetchAllEvents = () => async (dispatch) => {
     });
   }
 };
+
+export const findPostForEdit = (id) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/event/${id}`);
+    const event = res.data;
+    dispatch({
+      type: types.SET_EVENT_FOR_EDIT,
+      payload: {
+        event,
+      },
+    });
+  } catch (e) {
+    console.log(e?.response.data);
+    dispatch({
+      type: types.SET_EVENT_ERROR,
+      payload: {
+        errors: e?.response?.data,
+        errorType: 'edit',
+      },
+    });
+  }
+};
+
+export const eventUpdate = (values, id, cb) => async (dispatch) => {
+  try {
+    const res = await axios.put(`/event/${id}`, values);
+    const event = res.data;
+    console.log(event);
+    dispatch({
+      type: types.UPDATE_EVENT,
+      payload: {
+        event,
+      },
+    });
+    cb(true);
+  } catch (e) {
+    dispatch({
+      type: types.SET_EVENT_ERROR,
+      payload: {
+        errors: e?.response?.data,
+        errorType: 'e',
+      },
+    });
+    cb(false);
+  }
+};

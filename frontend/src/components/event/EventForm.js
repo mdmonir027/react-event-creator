@@ -17,8 +17,9 @@ import { FaMapMarkerAlt, FaMapMarked, FaCity } from 'react-icons/fa';
 import { AiOutlineDollar, AiOutlineLink } from 'react-icons/ai';
 import { validationLatitudeLongitude } from 'validation-latitude-longitude';
 import moment from 'moment';
-import { eventAdd } from 'store/action/event.action';
+import { eventAdd, eventUpdate } from 'store/action/event.action';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = createUseStyles({
   form: {},
@@ -67,11 +68,37 @@ const timeZoneList = [
   'UTC-12:00',
 ];
 
-const EventForm = ({ eventAdd }) => {
+const EventForm = ({ eventAdd, event, isEdit, eventUpdate }) => {
   const classes = useStyles();
   const [countryList, setCountryList] = useState([]);
   const [country, setCountry] = useState('');
+  const [timezone, setTimezone] = useState('');
+  const navigate = useNavigate();
+
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (isEdit) {
+      const fieldValues = {
+        name: event?.name || '',
+        ticket_price: event?.ticket_price || '',
+        address: event?.address || '',
+        city: event?.city || '',
+        coordinates: event?.coordinates || '',
+        country: event?.country || '',
+        date_from: moment(event.date_from) || '',
+        date_to: moment(event.date_to) || '',
+        time_from: moment(event.time_from) || '',
+        time_to: moment(event.time_to) || '',
+        timezone: event?.timezone || '',
+        source_url: event?.source_url || '',
+        description: event?.description || '',
+      };
+      form.setFieldsValue(fieldValues);
+      setCountry(event.country || '');
+      setTimezone(event.timezone || '');
+    }
+  }, [form, event, isEdit]);
 
   useEffect(() => {
     axios
@@ -85,11 +112,19 @@ const EventForm = ({ eventAdd }) => {
   }, []);
 
   const onFinish = (values) => {
-    eventAdd({ ...values, country }, (result) => {
-      if (result) {
-        form.resetFields();
-      }
-    });
+    if (isEdit) {
+      eventUpdate({ ...values, country, timezone }, event.id, (result) => {
+        if (result) {
+          navigate('/event/view');
+        }
+      });
+    } else {
+      eventAdd({ ...values, country, timezone }, (result) => {
+        if (result) {
+          form.resetFields();
+        }
+      });
+    }
   };
 
   return (
@@ -190,6 +225,7 @@ const EventForm = ({ eventAdd }) => {
                 style={{ width: '100%' }}
                 placeholder='Select a country'
                 optionFilterProp='children'
+                value={country}
                 name='country'
                 filterOption={(input, option) =>
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >=
@@ -273,6 +309,7 @@ const EventForm = ({ eventAdd }) => {
                 hasFeedback
                 name='time_from'
                 key='time_from'
+                defaultValue={moment('12:08:23')}
                 rules={[
                   {
                     required: true,
@@ -322,12 +359,14 @@ const EventForm = ({ eventAdd }) => {
                   placeholder='Select event timezone'
                   optionFilterProp='children'
                   name='timezone'
+                  value={timezone}
                   filterOption={(input, option) =>
                     option.children
                       .toLowerCase()
                       .indexOf(input.toLowerCase()) >= 0
                   }
                   hasFeedback
+                  onChange={(value) => setTimezone(value)}
                 >
                   {timeZoneList.map((value) => (
                     <Select.Option value={value} key={value}>
@@ -381,9 +420,9 @@ const EventForm = ({ eventAdd }) => {
             />
           </Form.Item>
 
-          <Form.Item hasFeedback>
+          <Form.Item>
             <Button type='primary' htmlType='submit' className={classes.button}>
-              Add Event
+              {isEdit ? 'Update' : 'Add'} Event
             </Button>
           </Form.Item>
         </Form>
@@ -391,10 +430,14 @@ const EventForm = ({ eventAdd }) => {
     </div>
   );
 };
-const mapStateToProps = (state) => ({
-  errors: state.event.errors,
-  errorType: state.event.errorType,
-});
+const mapStateToProps = (state) => {
+  const { errors, errorType, event } = state.event;
+  return {
+    errors,
+    errorType,
+    event,
+  };
+};
 
-const actions = { eventAdd };
+const actions = { eventAdd, eventUpdate };
 export default connect(mapStateToProps, actions)(EventForm);

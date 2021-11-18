@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import Layout from 'components/layout/Layout';
 import EventTable from 'components/event/EventTable';
@@ -6,11 +6,15 @@ import { Button, Col, Row } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
+import { fetchAllEvents } from 'store/action/event.action';
 
-const ViewEvent = ({ user }) => {
+const ViewEvent = ({ user, fetchAllEvents }) => {
+  useEffect(() => fetchAllEvents(), [fetchAllEvents]);
+
   if (!Object.keys(user).length > 0) {
     return <Navigate to='/' />;
   }
+
   return (
     <Layout>
       <Row justify='space-between'>
@@ -31,4 +35,4 @@ const ViewEvent = ({ user }) => {
 const mapStateToProps = (state) => ({
   user: state.auth.user,
 });
-export default connect(mapStateToProps)(ViewEvent);
+export default connect(mapStateToProps, { fetchAllEvents })(ViewEvent);

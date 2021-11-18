@@ -1,7 +1,12 @@
 const router = require('express').Router();
 const { eventCreateValidator } = require('../validator/eventValidation');
 
-const { create, getAll } = require('../controller/eventController');
+const {
+  create,
+  getAll,
+  find,
+  update,
+} = require('../controller/eventController');
 const { validationErrorResponse } = require('../utils/errorResponses');
 const authenticate = require('../middleware/auth/authenticate');
 
@@ -12,6 +17,14 @@ router.post(
   eventCreateValidator,
   validationErrorResponse,
   create
+);
+router.get('/:id', authenticate, find);
+router.put(
+  '/:id',
+  authenticate,
+  eventCreateValidator,
+  validationErrorResponse,
+  update
 );
 
 module.exports = router;

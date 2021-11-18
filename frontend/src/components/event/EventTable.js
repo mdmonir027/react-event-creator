@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Space, Table } from 'antd';
 
 import { FaPen, FaTrashAlt } from 'react-icons/fa';
 import { connect } from 'react-redux';
-import { fetchAllEvents } from 'store/action/event.action';
 import { sliceString } from 'utils/stringHelper';
 import moment from 'moment';
 
@@ -71,8 +70,7 @@ const columns = [
     ),
   },
 ];
-const EventTable = ({ fetchAllEvents, events }) => {
-  useEffect(() => fetchAllEvents(), [fetchAllEvents]);
+const EventTable = ({ events }) => {
   const dataSource = events?.map((event) => {
     const location = `${event.address || ' '} ${event.city || ' '} ${
       event.country || ' '
@@ -85,8 +83,8 @@ const EventTable = ({ fetchAllEvents, events }) => {
       : '';
     const date = `${date_from} - ${date_to} `;
 
-    const time_from = sliceString(event.time_from, 5, true);
-    const time_to = sliceString(event.time_to, 5, true);
+    const time_from = moment(event.time_from).format('h:mm a');
+    const time_to = moment(event.time_to).format('h:mm a');
     const time = `${time_from} - ${time_to}`;
 
     const data = { ...event, location, date, time };
@@ -94,10 +92,6 @@ const EventTable = ({ fetchAllEvents, events }) => {
     return data;
   });
 
-  useEffect(() => {
-    console.log(moment('2021-11-12 00:26:12').format());
-    console.log(moment('2021-11-12 00:26:12').format(' h:mm:ss a '));
-  }, []);
   return (
     <div className='table-wrapper'>
       <Table dataSource={dataSource} columns={columns} />
@@ -107,4 +101,4 @@ const EventTable = ({ fetchAllEvents, events }) => {
 const mapStateToProps = (state) => ({
   events: state.event.events,
 });
-export default connect(mapStateToProps, { fetchAllEvents })(EventTable);
+export default connect(mapStateToProps)(EventTable);

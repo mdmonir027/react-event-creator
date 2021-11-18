@@ -50,6 +50,9 @@ const eventSchema = {
   time_to: {
     type: DataTypes.STRING,
   },
+  timezone: {
+    type: DataTypes.STRING,
+  },
   source_url: {
     type: DataTypes.STRING,
   },
