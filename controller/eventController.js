@@ -1,6 +1,6 @@
 const { internalServerError } = require('../utils/errorResponses');
 const Event = require('../models/Event');
-const moment = require('moment');
+
 const controller = {
   create: async (req, res) => {
     try {
@@ -50,7 +50,14 @@ const controller = {
   },
   getAll: async (req, res) => {
     try {
-      const data = await Event.findAll();
+      const { admin } = req.query;
+      console.log(req.query);
+      let data;
+      if (admin === 'true') {
+        data = await Event.findAll();
+      } else {
+        data = await Event.findAll({ where: { created_by: req.user.id } });
+      }
       return res.status(200).json(data);
     } catch (e) {
       internalServerError(res, e);
@@ -60,6 +67,12 @@ const controller = {
     try {
       const { id } = req.params;
       const event = await Event.findByPk(id);
+
+      if (req.user.user_type !== 'A' && event.created_by !== req.user.id) {
+        return res.status(401).json({
+          message: 'You are not authorized!',
+        });
+      }
       const eventData = event.dataValues;
 
       Object.entries(eventData).forEach(([option, value]) => {
@@ -75,6 +88,14 @@ const controller = {
   update: async (req, res) => {
     try {
       const { id } = req.params;
+
+      const eventFind = await Event.findByPk(id);
+      if (req.user.user_type !== 'A' && eventFind.created_by !== req.user.id) {
+        return res.status(401).json({
+          message: 'You are not authorized!',
+        });
+      }
+
       const {
         name,
         address,
@@ -123,8 +144,15 @@ const controller = {
   remove: async (req, res) => {
     try {
       const { id } = req.params;
-      await Event.destroy({ where: { id } });
 
+      const eventFind = await Event.findByPk(id);
+      if (req.user.user_type !== 'A' && eventFind.created_by !== req.user.id) {
+        return res.status(401).json({
+          message: 'You are not authorized!',
+        });
+      }
+
+      await Event.destroy({ where: { id } });
       return res.status(200).json({ message: 'Event deleted successfully!' });
     } catch (e) {
       internalServerError(res, e);
