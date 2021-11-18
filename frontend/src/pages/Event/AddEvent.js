@@ -4,11 +4,12 @@ import React from 'react';
 import Layout from 'components/layout/Layout';
 import { Button, Col, Row } from 'antd';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-const AddEvent = ({ user }) => {
-  if (!Object.keys(user).length > 0) {
+const AddEvent = () => {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  if (!isAuthenticated) {
     return <Navigate to='/' />;
   }
   return (
@@ -28,7 +29,4 @@ const AddEvent = ({ user }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  user: state.auth.user,
-});
-export default connect(mapStateToProps)(AddEvent);
+export default AddEvent;

@@ -1,17 +1,13 @@
-import React, { useEffect } from 'react';
-
+import React from 'react';
 import Layout from 'components/layout/Layout';
 import EventTable from 'components/event/EventTable';
 import { Button, Col, Row } from 'antd';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { fetchAllEvents } from 'store/action/event.action';
-
-const ViewEvent = ({ user, fetchAllEvents }) => {
-  useEffect(() => fetchAllEvents(), [fetchAllEvents]);
-
-  if (!Object.keys(user).length > 0) {
+import { useSelector } from 'react-redux';
+const ViewEvent = () => {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  if (!isAuthenticated) {
     return <Navigate to='/' />;
   }
 
@@ -32,7 +28,4 @@ const ViewEvent = ({ user, fetchAllEvents }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  user: state.auth.user,
-});
-export default connect(mapStateToProps, { fetchAllEvents })(ViewEvent);
+export default ViewEvent;

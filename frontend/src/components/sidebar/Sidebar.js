@@ -17,7 +17,7 @@ const useStyles = createUseStyles({
   },
 });
 
-const Sidebar = ({ logout }) => {
+const Sidebar = ({ logout, isAdmin }) => {
   const classes = useStyles();
 
   const navigate = useNavigate();
@@ -27,6 +27,7 @@ const Sidebar = ({ logout }) => {
       navigate('/');
     }
   };
+
   return (
     <div className='bg-grey-red'>
       <Menu
@@ -43,14 +44,18 @@ const Sidebar = ({ logout }) => {
             <Link to='/event/view'>View Events</Link>
           </Menu.Item>
         </Menu.SubMenu>
-        <Menu.SubMenu key='user' icon={<AppstoreOutlined />} title='User'>
-          <Menu.Item key='5'>
-            <Link to='/user/add'>Add User</Link>
-          </Menu.Item>
-          <Menu.Item key='6'>
-            <Link to='/user'>View User</Link>
-          </Menu.Item>
-        </Menu.SubMenu>
+
+        {isAdmin && (
+          <Menu.SubMenu key='user' icon={<AppstoreOutlined />} title='User'>
+            <Menu.Item key='5'>
+              <Link to='/user/add'>Add User</Link>
+            </Menu.Item>
+            <Menu.Item key='6'>
+              <Link to='/user'>View User</Link>
+            </Menu.Item>
+          </Menu.SubMenu>
+        )}
+
         <Menu.SubMenu key='profile' icon={<AppstoreOutlined />} title='Profile'>
           <Menu.Item key='setting:1'>
             <Link to='/profile'>Profile</Link>
@@ -67,4 +72,9 @@ const Sidebar = ({ logout }) => {
   );
 };
 
-export default connect(null, { logout })(Sidebar);
+const mapStateToProps = (state) => {
+  const { isAdmin } = state.auth.user;
+  return { isAdmin };
+};
+
+export default connect(mapStateToProps, { logout })(Sidebar);

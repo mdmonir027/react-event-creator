@@ -6,9 +6,19 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { getAllUser } from 'store/action/user.action';
+import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const ViewUsers = ({ getAllUser }) => {
   useEffect(() => getAllUser(), [getAllUser]);
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  if (!isAuthenticated) {
+    return <Navigate to='/' />;
+  }
+  if (!user.isAdmin) {
+    return <Navigate to='/event/view' />;
+  }
+
   return (
     <Layout>
       <Row justify='space-between'>

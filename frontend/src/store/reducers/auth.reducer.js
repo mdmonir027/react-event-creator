@@ -1,6 +1,7 @@
 import * as types from '../action/actionTypes';
 const init = {
   user: {},
+  isAuthenticated: false,
   me: {},
   errors: {},
   errorType: '',
@@ -14,6 +15,7 @@ const authReducer = (state = init, action) => {
       return {
         ...state,
         user,
+        isAuthenticated: Object.keys(user).length > 0,
         errors: {},
         errorType: '',
       };

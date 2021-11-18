@@ -4,7 +4,17 @@ import UserForm from 'components/user/UserForm';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 const AddUser = () => {
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  if (!isAuthenticated) {
+    return <Navigate to='/' />;
+  }
+  if (!user.isAdmin) {
+    return <Navigate to='/event/view' />;
+  }
   return (
     <Layout>
       <Row justify='space-between'>

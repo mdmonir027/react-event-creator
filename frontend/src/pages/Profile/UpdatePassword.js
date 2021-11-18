@@ -3,8 +3,15 @@ import UpdatePasswordForm from 'components/profile/UpdatePasswordForm';
 import React from 'react';
 import { Row, Col, Button } from 'antd';
 import { Link } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const UpdatePassword = () => {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  if (!isAuthenticated) {
+    return <Navigate to='/' />;
+  }
+
   return (
     <Layout>
       <Row justify='space-between'>
