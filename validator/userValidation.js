@@ -36,6 +36,15 @@ const validator = {
     body('username').not().isEmpty().withMessage('Username is required!'),
     body('password').not().isEmpty().withMessage('Password is required!'),
   ],
+  userNameValidator: [
+    body('name')
+      .not()
+      .isEmpty()
+      .withMessage('Please enter a name')
+      .isLength({ min: 4, max: 50 })
+      .withMessage('Please enter a name between 4 to 50 chars')
+      .trim(),
+  ],
 };
 
 module.exports = validator;

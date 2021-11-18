@@ -55,6 +55,17 @@ const controller = {
       internalServerError(res, e);
     }
   },
+  updateName: async (req, res) => {
+    try {
+      const { name } = req.body;
+      await User.update({ name }, { where: { id: req.user.id } });
+      return res.status(200).json({
+        message: 'User full name Updated',
+      });
+    } catch (e) {
+      internalServerError(res, e);
+    }
+  },
 };
 
 module.exports = controller;

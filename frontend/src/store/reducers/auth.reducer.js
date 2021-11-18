@@ -28,10 +28,21 @@ const authReducer = (state = init, action) => {
     }
     case types.SET_AUTH_ME: {
       const { me } = action.payload;
-      console.log(me);
+
       return {
         ...state,
         me,
+      };
+    }
+    case types.SET_AUTH_USER_NAME: {
+      const { name } = action.payload;
+
+      return {
+        ...state,
+        me: {
+          ...state.me,
+          name,
+        },
       };
     }
 

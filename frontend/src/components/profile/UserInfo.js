@@ -5,20 +5,21 @@ import { FaPencilAlt } from 'react-icons/fa';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import { updateUserFullName } from 'store/action/auth.action';
 
-const UserInfo = ({ userData }) => {
+const UserInfo = ({ userData, updateUserFullName }) => {
   const [isEdit, setIsEdit] = useState(false);
-  const [name, setName] = useState('Monirul Islam');
+
   const [value, setValue] = useState('');
 
   const keyDownHandler = (event) => {
     if (event.key === 'Enter') {
-      setName(value);
       setIsEdit(false);
+      updateUserFullName(value);
     }
   };
 
-  useEffect(() => setValue(name), [name]);
+  useEffect(() => setValue(userData.name), [userData.name]);
 
   return (
     <div>
@@ -102,4 +103,4 @@ const mapStateToProps = (state) => {
 
   return { userData: me };
 };
-export default connect(mapStateToProps)(UserInfo);
+export default connect(mapStateToProps, { updateUserFullName })(UserInfo);
