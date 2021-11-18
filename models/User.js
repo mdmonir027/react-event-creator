@@ -22,6 +22,10 @@ const userSchema = {
     type: DataTypes.STRING,
     defaultValue: 'U',
   },
+  isDeleted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 };
 
 const User = db.define('user', userSchema);

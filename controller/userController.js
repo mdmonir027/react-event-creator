@@ -2,6 +2,7 @@ const User = require('../models/User');
 const { internalServerError } = require('../utils/errorResponses');
 const generate = require('../utils/passwordGenerator');
 const bcrypt = require('bcrypt');
+const Event = require('../models/Event');
 
 const controller = {
   create: async (req, res) => {
@@ -31,7 +32,10 @@ const controller = {
   },
   getAll: async (req, res) => {
     try {
-      const users = await User.findAll();
+      const users = await User.findAll({
+        where: { isDeleted: false },
+        attributes: { exclude: ['isDeleted', 'updatedAt', 'password'] },
+      });
 
       return res.status(200).json(users);
     } catch (e) {
@@ -41,7 +45,8 @@ const controller = {
   remove: async (req, res) => {
     try {
       const { id } = req.params;
-      await User.destroy({ where: { id } });
+      await User.update({ isDeleted: true }, { where: { id } });
+      await Event.update({ isDeleted: true }, { where: { created_by: id } });
       return res.status(200).json({
         message: 'User Deleted!',
       });
