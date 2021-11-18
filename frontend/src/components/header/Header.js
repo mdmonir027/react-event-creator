@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Menu, Avatar } from 'antd';
 import { createUseStyles } from 'react-jss';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { findMe } from 'store/action/auth.action';
+import { fetchAllEvents } from 'store/action/event.action';
+import { getAllUser } from 'store/action/user.action';
 
 const useStyles = createUseStyles({
   subMenu: {
@@ -21,15 +25,17 @@ const useStyles = createUseStyles({
   },
 });
 
-const Header = () => {
+const Header = ({ findMe, fetchAllEvents, getAllUser }) => {
   const classes = useStyles();
-  const handleClick = (e) => {
-    console.log('click ', e);
-  };
+
+  useEffect(() => findMe(), [findMe]);
+  useEffect(() => fetchAllEvents(), [fetchAllEvents]);
+  useEffect(() => getAllUser(), [getAllUser]);
+
   return (
     <div className={classes.main}>
       <div>
-        <Menu onClick={handleClick} mode='horizontal' style={{ border: 0 }}>
+        <Menu mode='horizontal' style={{ border: 0 }}>
           <Menu.SubMenu
             key='SubMenu'
             className={classes.subMenu}
@@ -51,4 +57,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default connect(null, { findMe, fetchAllEvents, getAllUser })(Header);

@@ -1,6 +1,7 @@
 import * as types from '../action/actionTypes';
 const init = {
   user: {},
+  me: {},
   errors: {},
   errorType: '',
 };
@@ -23,6 +24,14 @@ const authReducer = (state = init, action) => {
         ...state,
         errors,
         errorType: type,
+      };
+    }
+    case types.SET_AUTH_ME: {
+      const { me } = action.payload;
+      console.log(me);
+      return {
+        ...state,
+        me,
       };
     }
 

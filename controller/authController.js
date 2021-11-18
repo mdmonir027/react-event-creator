@@ -28,7 +28,6 @@ const controller = {
         {
           email: user.email,
           username: user.username,
-          login: user.login,
           iat: new Date().getTime(),
           exp: Date.now() + 1000 * 60 * 60 * 2,
           isAdmin,
@@ -36,7 +35,7 @@ const controller = {
         JWT_TOKEN_SECRET
       );
 
-      await User.update({ last_login: new Date() }, { where: { username } });
+      await User.update({ last_login: moment() }, { where: { username } });
 
       return res.status(200).json({
         message: 'Login was successful',
@@ -46,7 +45,16 @@ const controller = {
       internalServerError(res, e);
     }
   },
-  me: async (req, res) => {},
+  me: async (req, res) => {
+    try {
+      const user = await User.findByPk(req.user.id, {
+        attributes: { exclude: ['isDeleted', 'updatedAt', 'password'] },
+      });
+      return res.status(200).json(user);
+    } catch (e) {
+      internalServerError(res, e);
+    }
+  },
 };
 
 module.exports = controller;

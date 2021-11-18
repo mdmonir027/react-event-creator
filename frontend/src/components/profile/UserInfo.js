@@ -3,7 +3,10 @@ import { Row, Col } from 'antd';
 import style from './userInfo.module.css';
 import { FaPencilAlt } from 'react-icons/fa';
 import { AiFillCloseCircle } from 'react-icons/ai';
-const UserInfo = () => {
+import { connect } from 'react-redux';
+import moment from 'moment';
+
+const UserInfo = ({ userData }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [name, setName] = useState('Monirul Islam');
   const [value, setValue] = useState('');
@@ -46,7 +49,7 @@ const UserInfo = () => {
                         onKeyPress={keyDownHandler}
                       />
                     ) : (
-                      <span>{name}</span>
+                      <span>{userData.name}</span>
                     )}
                     <div
                       className={style.icon}
@@ -59,12 +62,31 @@ const UserInfo = () => {
                 <tr>
                   <td>2</td>
                   <td>Username</td>
-                  <td>mdmonir027</td>
+                  <td>{userData.username}</td>
                 </tr>
                 <tr>
                   <td>3</td>
                   <td>Emails</td>
-                  <td>mmislam027@gmail.com</td>
+                  <td>{userData.email}</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Role</td>
+                  <td>{userData.user_type === 'A' ? 'Admin' : 'User'}</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>Last Login</td>
+                  <td>
+                    {moment(userData.last_login).format('DD MMMM YYYY h:mm A')}
+                  </td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td>Created At</td>
+                  <td>
+                    {moment(userData.createdAt).format('DD MMMM YYYY h:mm A')}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -75,4 +97,9 @@ const UserInfo = () => {
   );
 };
 
-export default UserInfo;
+const mapStateToProps = (state) => {
+  const { me } = state.auth;
+
+  return { userData: me };
+};
+export default connect(mapStateToProps)(UserInfo);
