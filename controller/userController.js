@@ -38,6 +38,17 @@ const controller = {
       internalServerError(res, e);
     }
   },
+  remove: async (req, res) => {
+    try {
+      const { id } = req.params;
+      await User.destroy({ where: { id } });
+      return res.status(200).json({
+        message: 'User Deleted!',
+      });
+    } catch (e) {
+      internalServerError(res, e);
+    }
+  },
 };
 
 module.exports = controller;

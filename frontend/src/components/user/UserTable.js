@@ -1,8 +1,10 @@
-import { Button, Space, Table } from 'antd';
+import { Button, Space, Table, Popconfirm } from 'antd';
 import moment from 'moment';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { FaTrashAlt } from 'react-icons/fa';
 
 import { connect } from 'react-redux';
+import { deleteUser } from 'store/action/user.action';
 
 const columns = [
   {
@@ -36,18 +38,37 @@ const columns = [
     title: 'Action',
     dataIndex: 'id',
     key: 'action',
-    render: (id) => (
-      <Space>
-        <Button>Delete</Button>
-      </Space>
-    ),
+    render: (id, { deleteUser }) => {
+      return (
+        <Space>
+          <Popconfirm
+            okText='Yes'
+            cancelText='No'
+            title='Are you sure to delete this user?'
+            onConfirm={() => deleteUser(id)}
+          >
+            <Button>
+              <FaTrashAlt />
+            </Button>
+          </Popconfirm>
+        </Space>
+      );
+    },
   },
 ];
-const UserTable = ({ users }) => {
-  //   console.log(users);
+const UserTable = ({ users, deleteUser }) => {
+  const [dataSource, setDataSource] = useState([]);
+  useEffect(() => {
+    setDataSource(
+      users.map((user) => {
+        user.deleteUser = deleteUser;
+        return user;
+      })
+    );
+  }, [users, deleteUser]);
   return (
     <div>
-      <Table dataSource={users} columns={columns} />
+      <Table dataSource={dataSource} columns={columns} rowKey='id' />
     </div>
   );
 };
@@ -57,4 +78,4 @@ const mapStateToProps = (state) => {
   return { users };
 };
 
-export default connect(mapStateToProps)(UserTable);
+export default connect(mapStateToProps, { deleteUser })(UserTable);
