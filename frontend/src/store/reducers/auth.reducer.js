@@ -22,8 +22,8 @@ const authReducer = (state = init, action) => {
       const { errors, type } = action.payload;
       return {
         ...state,
-        errors,
         errorType: type,
+        errors,
       };
     }
     case types.SET_AUTH_ME: {

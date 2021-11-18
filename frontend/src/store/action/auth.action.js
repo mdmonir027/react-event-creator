@@ -48,7 +48,7 @@ export const findMe = () => async (dispatch) => {
   }
 };
 
-export const updateUserFullName = (name, cb) => async (dispatch) => {
+export const updateUserFullName = (name) => async (dispatch) => {
   try {
     const { data } = await axios.post('/auth/me/name', { name });
 
@@ -71,5 +71,30 @@ export const updateUserFullName = (name, cb) => async (dispatch) => {
         marginTop: '10vh',
       },
     });
+  }
+};
+
+export const updatePassword = (values, cb) => async (dispatch) => {
+  try {
+    const { data } = await axios.put('/auth/me/password', values);
+
+    message.success({
+      content: data.message,
+      style: {
+        marginTop: '10vh',
+      },
+    });
+    console.log(data);
+    cb(true);
+  } catch (e) {
+    dispatch({
+      type: types.SET_AUTH_ERROR,
+      payload: {
+        type: 'password',
+        errors: e?.response?.data,
+      },
+    });
+
+    cb(false);
   }
 };

@@ -1,27 +1,56 @@
-import { Form, Button, Input, Row, Col } from 'antd';
+import { Form, Button, Input, Row, Col, message } from 'antd';
 import { AiFillLock } from 'react-icons/ai';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { updatePassword } from 'store/action/auth.action';
+import { useNavigate } from 'react-router-dom';
 
-const UpdatePasswordForm = () => {
+const UpdatePasswordForm = ({ updatePassword, errors }) => {
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
   const onFinish = (values) => {
-    console.log(values);
+    updatePassword(values, (result) => {
+      if (result) {
+        message.success({
+          content: 'Redirecting....',
+          style: {
+            marginTop: '11vh',
+          },
+        });
+        setTimeout(() => {
+          navigate('/profile');
+        }, 3000);
+      }
+    });
   };
+  useEffect(() => {
+    const errorObject =
+      Object.keys(errors).length > 0
+        ? Object.entries(errors).map(([name, value]) => {
+            return {
+              name,
+              errors: [value],
+            };
+          })
+        : [];
+    form.setFields(errorObject);
+  }, [errors, form]);
   return (
     <div>
-      <Form name='normal_login' onFinish={onFinish}>
+      <Form name='normal_login' onFinish={onFinish} form={form}>
         <Row gutter={10}>
           <Col span={12}>
             <Form.Item
-              name='old-password'
+              name='oldPassword'
               rules={[
                 {
                   required: true,
                   message: 'Old password is required!',
                 },
               ]}
-              key='old-password'
+              key='oldPassword'
             >
-              <Input
+              <Input.Password
                 prefix={<AiFillLock />}
                 type='text'
                 placeholder='Old Password'
@@ -30,16 +59,17 @@ const UpdatePasswordForm = () => {
           </Col>
           <Col span={12}>
             <Form.Item
-              name='new-password'
+              name='newPassword'
+              dependencies={['confirmPassword']}
               rules={[
                 {
                   required: true,
                   message: 'New password is required!',
                 },
               ]}
-              key='new-password'
+              key='newPassword'
             >
-              <Input
+              <Input.Password
                 prefix={<AiFillLock />}
                 type='text'
                 placeholder='New Password'
@@ -49,16 +79,28 @@ const UpdatePasswordForm = () => {
         </Row>
 
         <Form.Item
-          name='confirm-password'
+          name='confirmPassword'
+          dependencies={['newPassword']}
           rules={[
             {
               required: true,
               message: 'Confirm your password!',
             },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                const { newPassword } = getFieldValue();
+
+                if (newPassword === value) {
+                  return Promise.resolve();
+                }
+
+                return Promise.reject("Password didn't match!");
+              },
+            }),
           ]}
-          key='confirm-password'
+          key='confirmPassword'
         >
-          <Input
+          <Input.Password
             prefix={<AiFillLock />}
             type='text'
             placeholder='Confirm password'
@@ -75,4 +117,12 @@ const UpdatePasswordForm = () => {
   );
 };
 
-export default UpdatePasswordForm;
+const mapStateToProps = (state) => {
+  const { errors, errorType } = state.auth;
+
+  return {
+    errors: errorType === 'password' ? errors : {},
+  };
+};
+
+export default connect(mapStateToProps, { updatePassword })(UpdatePasswordForm);

@@ -66,6 +66,37 @@ const controller = {
       internalServerError(res, e);
     }
   },
+  updatePassword: async (req, res) => {
+    try {
+      const { oldPassword, newPassword, confirmPassword } = req.body;
+      console.log({ oldPassword, newPassword, confirmPassword });
+      const user = await User.findByPk(req.user.id);
+
+      const match = await bcrypt.compare(oldPassword, user.password);
+      if (!match) {
+        return res.status(400).json({
+          oldPassword: 'Incorrect Password',
+        });
+      }
+
+      return res.status(200).json({
+        message: 'User password updated 1',
+        match,
+        user,
+      });
+      const { SALT_ROUND } = process.env;
+
+      const salt = await bcrypt.genSalt(parseInt(SALT_ROUND));
+      const password = await bcrypt.hash(newPassword, salt);
+
+      await User.update({ password }, { where: { id: req.user.id } });
+      return res.status(200).json({
+        message: 'User password updated',
+      });
+    } catch (e) {
+      internalServerError(res, e);
+    }
+  },
 };
 
 module.exports = controller;
