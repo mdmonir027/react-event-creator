@@ -9,12 +9,12 @@ const validator = {
       .isLength({ min: 4, max: 50 })
       .withMessage('Please enter a name between 4 to 50 chars')
       .trim(),
-    body('login')
+    body('username')
       .not()
       .isEmpty()
       .withMessage('Please enter a username')
-      .custom(async (login) => {
-        const userData = await User.findOne({ where: { login } });
+      .custom(async (username) => {
+        const userData = await User.findOne({ where: { username } });
         if (userData) {
           throw new Error('Username is already exists!');
         }

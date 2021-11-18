@@ -20,7 +20,7 @@ const userSchema = {
   },
   user_type: {
     type: DataTypes.STRING,
-    defaultValue: 'u',
+    defaultValue: 'U',
   },
 };
 

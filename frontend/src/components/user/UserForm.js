@@ -1,17 +1,38 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { AiOutlineLogin, AiOutlineMail } from 'react-icons/ai';
+import { addUser } from 'store/action/user.action';
+import { connect } from 'react-redux';
+import { useNavigate } from 'react-router';
 
-const UserForm = () => {
+const UserForm = ({ addUser, errors }) => {
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+    addUser(values, (result) => {
+      if (result) {
+        navigate('/user');
+      }
+    });
   };
+  useEffect(() => {
+    const errorObject =
+      Object.keys(errors).length > 0
+        ? Object.entries(errors).map(([name, value]) => {
+            return {
+              name,
+              errors: [value],
+            };
+          })
+        : [];
+    form.setFields(errorObject);
+  }, [errors, form]);
   return (
     <div>
       <Row>
         <Col span={24}>
-          <Form name='normal_login' onFinish={onFinish}>
+          <Form name='normal_login' form={form} onFinish={onFinish}>
             <Row gutter={10}>
               <Col span={12}>
                 <Form.Item
@@ -59,8 +80,12 @@ const UserForm = () => {
                       required: true,
                       message: 'Email is required!',
                     },
+                    {
+                      type: 'email',
+                      message: 'Email must be valid!',
+                    },
                   ]}
-                  key='username'
+                  key='email'
                 >
                   <Input
                     prefix={<AiOutlineMail />}
@@ -83,4 +108,12 @@ const UserForm = () => {
   );
 };
 
-export default UserForm;
+const mapStateToProps = (state) => {
+  const { errors, type } = state.user;
+
+  return {
+    errors: type === 'add' ? errors : {},
+  };
+};
+
+export default connect(mapStateToProps, { addUser })(UserForm);
