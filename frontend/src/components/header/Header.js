@@ -20,7 +20,7 @@ const useStyles = createUseStyles({
     marginBottom: 10,
     position: ' fixed',
     width: ' 100%',
-    zIndex: ' 999999',
+    zIndex: ' 1000',
     height: ' 65px',
     background: ' white',
   },

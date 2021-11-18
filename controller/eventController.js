@@ -1,5 +1,7 @@
 const { internalServerError } = require('../utils/errorResponses');
 const Event = require('../models/Event');
+const Image = require('../models/Image');
+const shortid = require('shortid');
 
 const controller = {
   create: async (req, res) => {
@@ -161,6 +163,55 @@ const controller = {
 
       await Event.update({ isDeleted: 1 }, { where: { id } });
       return res.status(200).json({ message: 'Event deleted successfully!' });
+    } catch (e) {
+      internalServerError(res, e);
+    }
+  },
+  imageUpload: async (req, res) => {
+    try {
+      if (req.file) {
+        const { filename } = req.file;
+        const imageData = {
+          filename,
+          event_id: req.params.id,
+        };
+        const imageSave = await Image.create(imageData);
+        const image = {
+          id: imageSave.id,
+          url: `${req.protocol}://${req.get('host')}/event/images/${
+            imageSave.filename
+          }`,
+          isUploading: false,
+        };
+
+        return res.status(200).json(image);
+      } else {
+        throw new Error('File upload failed');
+      }
+    } catch (e) {
+      internalServerError(res, e);
+    }
+  },
+  getImages: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const data = await Image.findAll({
+        where: { event_id: id },
+        attributes: { exclude: ['isDeleted', 'updatedAt'] },
+      });
+
+      const images = data.map((image) => {
+        const imageData = image.dataValues;
+        return {
+          id: imageData.id,
+          url: `${req.protocol}://${req.get('host')}/event/images/${
+            imageData.filename
+          }`,
+          isUploading: false,
+        };
+      });
+
+      return res.status(200).json(images);
     } catch (e) {
       internalServerError(res, e);
     }

@@ -6,7 +6,7 @@ const app = express();
 
 require('./middleware/setMiddleware')(app);
 require('./routes/setRoutes')(app);
-
+app.use(express.static('public'));
 db.authenticate()
   .then(() => {
     console.log('Database connected successfully');

@@ -10,6 +10,7 @@ import ViewUsers from 'pages/User/ViewUsers.page';
 import EditUser from 'pages/User/EditUser.page';
 import Profile from 'pages/Profile/Profile';
 import UpdatePassword from 'pages/Profile/UpdatePassword';
+import EventImageUpload from 'components/event/EventImageUpload';
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Login />} />
 
+        <Route path='/event/:id/image' element={<EventImageUpload />} />
         <Route path='/event/add' element={<AddEvent />} />
         <Route path='/event/view' element={<ViewEvent />} />
         <Route path='/event/edit/:id' element={<EditEvent />} />

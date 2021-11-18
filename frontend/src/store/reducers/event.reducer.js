@@ -5,6 +5,7 @@ const init = {
   errors: {},
   errorType: '',
   event: {},
+  images: [],
 };
 
 const eventReducer = (state = init, action) => {
@@ -60,6 +61,36 @@ const eventReducer = (state = init, action) => {
       return {
         ...state,
         events,
+      };
+    }
+    case types.FETCH_EVENT_IMAGES: {
+      const { images } = action.payload;
+
+      return {
+        ...state,
+        images,
+      };
+    }
+    case types.EVENT_IMAGE_UPLOAD: {
+      const { image } = action.payload;
+      const images = [...state.images, image];
+      return {
+        ...state,
+        images,
+      };
+    }
+    case types.EVENT_IMAGE_UPLOAD_UPDATE: {
+      const { image, tempId } = action.payload;
+
+      const images = state.images.map((item) => {
+        if (item.id === tempId) {
+          return image;
+        }
+        return item;
+      });
+      return {
+        ...state,
+        images,
       };
     }
     default:

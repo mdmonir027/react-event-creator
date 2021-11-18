@@ -1,6 +1,7 @@
 import * as types from './actionTypes';
 import axios from 'axios';
 import { getToken } from 'utils/token';
+import shortid from 'shortid';
 axios.defaults.headers.common['Authorization'] = getToken();
 
 export const eventAdd = (values, cb) => async (dispatch) => {
@@ -118,3 +119,56 @@ export const deleteEvent = (id) => async (dispatch) => {
     });
   }
 };
+
+export const fetchEventImages = (id) => async (dispatch) => {
+  try {
+    const { data } = await axios.get(`/event/${id}/image`);
+
+    dispatch({
+      type: types.FETCH_EVENT_IMAGES,
+      payload: { images: data },
+    });
+  } catch (e) {
+    dispatch({
+      type: types.SET_EVENT_ERROR,
+      payload: {
+        errors: e?.response?.data,
+        errorType: 'e',
+      },
+    });
+  }
+};
+
+export const eventImageUpload =
+  ({ id, url, formData }) =>
+  async (dispatch) => {
+    try {
+      const tempId = shortid();
+      const TempData = {
+        id: tempId,
+        url,
+        isUploading: true,
+      };
+      dispatch({
+        type: types.EVENT_IMAGE_UPLOAD,
+        payload: { image: TempData },
+      });
+      console.log(tempId);
+
+      const { data } = await axios.post(`/event/${id}/image`, formData);
+      console.log(data);
+
+      dispatch({
+        type: types.EVENT_IMAGE_UPLOAD_UPDATE,
+        payload: { image: data, tempId },
+      });
+    } catch (e) {
+      dispatch({
+        type: types.SET_EVENT_ERROR,
+        payload: {
+          errors: e?.response?.data,
+          errorType: 'e',
+        },
+      });
+    }
+  };
