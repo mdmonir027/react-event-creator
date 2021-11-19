@@ -1,5 +1,5 @@
-import React from 'react';
-import { Form, Input, Button, Typography, Space } from 'antd';
+import React, { useEffect } from 'react';
+import { Form, Input, Button, Typography } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { createUseStyles } from 'react-jss';
 import { connect } from 'react-redux';
@@ -15,21 +15,37 @@ const useStyles = createUseStyles({
   button: {
     width: '100%',
   },
+  title: {
+    textAlign: 'center',
+  },
 });
 
 const LoginForm = ({ loginAction, errors }) => {
   const classes = useStyles();
+  const [form] = Form.useForm();
   const onFinish = (values) => {
     loginAction(values);
   };
+  useEffect(() => {
+    const errorObject =
+      Object.keys(errors).length > 0
+        ? Object.entries(errors).map(([name, value]) => {
+            return {
+              name,
+              errors: [value],
+            };
+          })
+        : [];
+    form.setFields(errorObject);
+  }, [errors, form]);
   return (
-    <Form name='normal_login' className={classes.form} onFinish={onFinish}>
-      <Space direction='vertical' style={{ marginBottom: 10 }}>
-        {Object.keys(errors).length > 0 &&
-          Object.values(errors).map((value) => (
-            <Typography.Text type='danger'>{value}</Typography.Text>
-          ))}
-      </Space>
+    <Form
+      name='normal_login'
+      className={classes.form}
+      onFinish={onFinish}
+      form={form}
+    >
+      <Typography.Title className={classes.title}>Login Here</Typography.Title>
       <Form.Item
         name='username'
         rules={[
@@ -38,6 +54,7 @@ const LoginForm = ({ loginAction, errors }) => {
             message: 'Please input your Username!',
           },
         ]}
+        key='username'
       >
         <Input prefix={<UserOutlined />} type='text' placeholder='Username' />
       </Form.Item>
@@ -50,6 +67,7 @@ const LoginForm = ({ loginAction, errors }) => {
             message: 'Please input your Password!',
           },
         ]}
+        key='password'
       >
         <Input.Password
           prefix={<LockOutlined />}
@@ -64,18 +82,21 @@ const LoginForm = ({ loginAction, errors }) => {
         </Button>
       </Form.Item>
 
-      <Form.Item>
+      {/* <Form.Item>
         <a className='login-form-forgot' href='/'>
           Forgot password
         </a>
-      </Form.Item>
+      </Form.Item> */}
     </Form>
   );
 };
 
-const mapStateToProps = (state) => ({
-  errors: state.auth.errors,
-});
+const mapStateToProps = (state) => {
+  const { errors, errorType } = state.auth;
+  return {
+    errors: errorType === 'login' ? errors : {},
+  };
+};
 const functions = { loginAction };
 
 export default connect(mapStateToProps, functions)(LoginForm);

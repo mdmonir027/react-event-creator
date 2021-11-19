@@ -16,7 +16,6 @@ export const loginAction =
         payload: { user },
       });
     } catch (e) {
-      console.log(e?.response?.data);
       dispatch({
         type: types.SET_AUTH_ERROR,
         payload: {
@@ -37,7 +36,6 @@ export const findMe = () => async (dispatch) => {
       },
     });
   } catch (e) {
-    console.log(e?.response?.data);
     dispatch({
       type: types.SET_AUTH_ERROR,
       payload: {
@@ -63,8 +61,6 @@ export const updateUserFullName = (name) => async (dispatch) => {
       },
     });
   } catch (e) {
-    console.log(e?.response?.data);
-
     message.error({
       content: 'Error try again!',
       style: {
@@ -84,7 +80,7 @@ export const updatePassword = (values, cb) => async (dispatch) => {
         marginTop: '10vh',
       },
     });
-    console.log(data);
+
     cb(true);
   } catch (e) {
     dispatch({

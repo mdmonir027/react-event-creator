@@ -26,7 +26,7 @@ const useStyles = createUseStyles({
   },
 });
 
-const Header = ({ findMe, fetchAllEvents, getAllUser, logout }) => {
+const Header = ({ findMe, fetchAllEvents, getAllUser, logout, name }) => {
   const classes = useStyles();
 
   useEffect(() => findMe(), [findMe]);
@@ -47,7 +47,9 @@ const Header = ({ findMe, fetchAllEvents, getAllUser, logout }) => {
           <Menu.SubMenu
             key='SubMenu'
             className={classes.subMenu}
-            icon={<Avatar src='https://joeschmoe.io/api/v1/random' />}
+            icon={
+              <Avatar src={`https://eu.ui-avatars.com/api/?name=${name}`} />
+            }
           >
             <Menu.Item key='setting:1'>
               <Link to='/profile'>Profile</Link>
@@ -65,6 +67,11 @@ const Header = ({ findMe, fetchAllEvents, getAllUser, logout }) => {
   );
 };
 
+const mapStateToProps = (state) => {
+  const { name } = state.auth.me;
+  return { name };
+};
+
 const actions = { findMe, fetchAllEvents, getAllUser, logout };
 
-export default connect(null, actions)(Header);
+export default connect(mapStateToProps, actions)(Header);

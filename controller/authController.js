@@ -12,8 +12,8 @@ const controller = {
       const { username, password } = req.body;
       const user = await User.findOne({ where: { username } });
       const errorResponseMessage = {
-        username: 'Invalid Credentials',
-        email: 'Invalid Credentials',
+        username: 'Username is incorrect!',
+        password: 'Password is incorrect!',
       };
       if (!user) {
         return res.status(400).json(errorResponseMessage);
