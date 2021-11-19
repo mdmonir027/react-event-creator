@@ -5,6 +5,7 @@ import { Button, Col, Row } from 'antd';
 import { Link } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import routeList from 'utils/routeList';
 const ViewEvent = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   if (!isAuthenticated) {
@@ -19,7 +20,7 @@ const ViewEvent = () => {
         </Col>
         <Col>
           <Button type='primary'>
-            <Link to='/event/add'>Add Event</Link>
+            <Link to={routeList.event.add}>Add Event</Link>
           </Button>
         </Col>
       </Row>

@@ -8,6 +8,7 @@ import { fetchAllEvents } from 'store/action/event.action';
 import { getAllUser } from 'store/action/user.action';
 import { logout } from 'store/action/auth.action';
 import { useNavigate } from 'react-router-dom';
+import routeList from 'utils/routeList';
 const useStyles = createUseStyles({
   subMenu: {
     padding: 0,
@@ -64,10 +65,10 @@ const Header = ({
             }
           >
             <Menu.Item key='setting:1'>
-              <Link to='/profile'>Profile</Link>
+              <Link to={routeList.profile.view}>Profile</Link>
             </Menu.Item>
             <Menu.Item key='setting:2'>
-              <Link to='/change-password'>Change Password</Link>
+              <Link to={routeList.profile.updatePassword}>Change Password</Link>
             </Menu.Item>
             <Menu.Item key='setting:3' onClick={logoutHandler}>
               Log Out

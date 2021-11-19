@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import routeList from 'utils/routeList';
 
 const AddUser = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -23,7 +24,7 @@ const AddUser = () => {
         </Col>
         <Col>
           <Button type='primary'>
-            <Link to='/user'>View User</Link>
+            <Link to={routeList.user.view}>View User</Link>
           </Button>
         </Col>
       </Row>

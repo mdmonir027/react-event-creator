@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { findPostForEdit } from 'store/action/event.action';
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import routeList from 'utils/routeList';
 
 const EditEvent = ({ findPostForEdit }) => {
   const { id } = useParams();
@@ -25,7 +26,7 @@ const EditEvent = ({ findPostForEdit }) => {
         </Col>
         <Col>
           <Button type='primary'>
-            <Link to='/event/view'>View Events</Link>
+            <Link to={routeList.event.view}>View Events</Link>
           </Button>
         </Col>
       </Row>

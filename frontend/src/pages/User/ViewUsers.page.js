@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { getAllUser } from 'store/action/user.action';
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import routeList from 'utils/routeList';
 
 const ViewUsers = ({ getAllUser }) => {
   useEffect(() => getAllUser(), [getAllUser]);
@@ -27,7 +28,7 @@ const ViewUsers = ({ getAllUser }) => {
         </Col>
         <Col>
           <Button type='primary'>
-            <Link to='/user/add'>Add User</Link>
+            <Link to={routeList.user.add}>Add User</Link>
           </Button>
         </Col>
       </Row>

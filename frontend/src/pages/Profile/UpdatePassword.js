@@ -5,6 +5,7 @@ import { Row, Col, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import routeList from 'utils/routeList';
 
 const UpdatePassword = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -20,7 +21,7 @@ const UpdatePassword = () => {
         </Col>
         <Col>
           <Button type='primary'>
-            <Link to='/profile'>Go To Profile</Link>
+            <Link to={routeList.profile.view}>Go To Profile</Link>
           </Button>
         </Col>
       </Row>

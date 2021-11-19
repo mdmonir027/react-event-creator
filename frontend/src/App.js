@@ -7,10 +7,10 @@ import ViewEvent from 'pages/Event/ViewEvent';
 import EditEvent from 'pages/Event/EditEvent';
 import AddUser from 'pages/User/AddUser.page';
 import ViewUsers from 'pages/User/ViewUsers.page';
-import EditUser from 'pages/User/EditUser.page';
 import Profile from 'pages/Profile/Profile';
 import UpdatePassword from 'pages/Profile/UpdatePassword';
 import Images from 'pages/Event/Images.page';
+import routeList from 'utils/routeList.js';
 
 const App = () => {
   return (
@@ -18,17 +18,19 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Login />} />
 
-        <Route path='/event/:id/image' element={<Images />} />
-        <Route path='/event/add' element={<AddEvent />} />
-        <Route path='/event/view' element={<ViewEvent />} />
-        <Route path='/event/edit/:id' element={<EditEvent />} />
+        <Route path={routeList.event.images} element={<Images />} />
+        <Route path={routeList.event.add} element={<AddEvent />} />
+        <Route path={routeList.event.view} element={<ViewEvent />} />
+        <Route path={routeList.event.edit} element={<EditEvent />} />
 
-        <Route path='/user' element={<ViewUsers />} />
-        <Route path='/user/add' element={<AddUser />} />
-        <Route path='/user/edit/:id' element={<EditUser />} />
+        <Route path={routeList.user.view} element={<ViewUsers />} />
+        <Route path={routeList.user.add} element={<AddUser />} />
 
-        <Route path='/change-password' element={<UpdatePassword />} />
-        <Route path='/profile' element={<Profile />} />
+        <Route
+          path={routeList.profile.updatePassword}
+          element={<UpdatePassword />}
+        />
+        <Route path={routeList.profile.view} element={<Profile />} />
       </Routes>
     </div>
   );
