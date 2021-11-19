@@ -29,7 +29,7 @@ const EditEvent = ({ findPostForEdit }) => {
           </Button>
         </Col>
       </Row>
-      <EventForm isEdit />
+      <EventForm isEdit id={id} />
     </Layout>
   );
 };

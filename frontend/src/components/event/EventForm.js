@@ -9,6 +9,8 @@ import {
   Typography,
   DatePicker,
   TimePicker,
+  Switch,
+  Space,
 } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { createUseStyles } from 'react-jss';
@@ -20,10 +22,13 @@ import moment from 'moment';
 import { eventAdd, eventUpdate } from 'store/action/event.action';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import EventImageUpload from './EventImageUpload';
 
 const useStyles = createUseStyles({
   form: {},
-  button: {},
+  button: {
+    marginTop: 20,
+  },
   formWrapper: {
     marginTop: 20,
   },
@@ -68,10 +73,11 @@ const timeZoneList = [
   'UTC-12:00',
 ];
 
-const EventForm = ({ eventAdd, event, isEdit, eventUpdate }) => {
+const EventForm = ({ eventAdd, event, isEdit, eventUpdate, id }) => {
   const classes = useStyles();
   const [countryList, setCountryList] = useState([]);
   const [country, setCountry] = useState('');
+  const [isImageUpload, setIsImageUpload] = useState(false);
   const [timezone, setTimezone] = useState('');
   const navigate = useNavigate();
 
@@ -119,9 +125,12 @@ const EventForm = ({ eventAdd, event, isEdit, eventUpdate }) => {
         }
       });
     } else {
-      eventAdd({ ...values, country, timezone }, (result) => {
+      eventAdd({ ...values, country, timezone }, (result, { id }) => {
         if (result) {
           form.resetFields();
+          if (isImageUpload) {
+            navigate(`/event/${id}/image`);
+          }
         }
       });
     }
@@ -419,6 +428,23 @@ const EventForm = ({ eventAdd, event, isEdit, eventUpdate }) => {
               autoSize={{ minRows: 8, maxRows: 10 }}
             />
           </Form.Item>
+          {isEdit && (
+            <>
+              <h4>Uploaded Images</h4>
+              <EventImageUpload id={id} />{' '}
+            </>
+          )}
+          {!isEdit && (
+            <Space>
+              <Switch
+                checkedChildren='Yes'
+                unCheckedChildren='No'
+                checked={isImageUpload}
+                onChange={() => setIsImageUpload((prevState) => !prevState)}
+              />
+              <Typography.Text>Upload image for this event</Typography.Text>
+            </Space>
+          )}
 
           <Form.Item>
             <Button type='primary' htmlType='submit' className={classes.button}>

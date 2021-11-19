@@ -16,7 +16,7 @@ export const eventAdd = (values, cb) => async (dispatch) => {
         event,
       },
     });
-    cb(true);
+    cb(true, { id: event.id });
   } catch (e) {
     console.log(e?.response.data);
     dispatch({
@@ -154,7 +154,6 @@ export const eventImageUpload =
         type: types.EVENT_IMAGE_UPLOAD,
         payload: { image: TempData },
       });
-      console.log(tempId);
 
       const { data } = await axios.post(`/event/${id}/image`, formData);
 
