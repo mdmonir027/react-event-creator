@@ -4,13 +4,12 @@
 
 1. Clone this repo
 2. Run `yarn` or `npm install`
-3. Copy the `mysql` directory to `node_modules/sequelize/lib/dialects`
-4. Run `cd frontend ` and `yarn` or `npm install`
+3. Run `cd frontend ` and `yarn` or `npm install`
 
 ### Setup Environment Variable
 
 1. Rename the `.env.example` to `.env`
-2.
+2. And fill this property with values
 
 ```
 DATABASE_NAME=
