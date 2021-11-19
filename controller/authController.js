@@ -83,11 +83,6 @@ const controller = {
         });
       }
 
-      return res.status(200).json({
-        message: 'User password updated 1',
-        match,
-        user,
-      });
       const { SALT_ROUND } = process.env;
 
       const salt = await bcrypt.genSalt(parseInt(SALT_ROUND));

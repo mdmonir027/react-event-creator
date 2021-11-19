@@ -11,15 +11,10 @@ const UpdatePasswordForm = ({ updatePassword, errors }) => {
   const onFinish = (values) => {
     updatePassword(values, (result) => {
       if (result) {
-        message.success({
-          content: 'Redirecting....',
-          style: {
-            marginTop: '11vh',
-          },
-        });
+        message.success('Redirecting....');
         setTimeout(() => {
           navigate('/profile');
-        }, 3000);
+        }, 2000);
       }
     });
   };
@@ -39,7 +34,7 @@ const UpdatePasswordForm = ({ updatePassword, errors }) => {
     <div>
       <Form name='normal_login' onFinish={onFinish} form={form}>
         <Row gutter={10}>
-          <Col span={12}>
+          <Col span={24}>
             <Form.Item
               name='oldPassword'
               rules={[
@@ -76,36 +71,37 @@ const UpdatePasswordForm = ({ updatePassword, errors }) => {
               />
             </Form.Item>
           </Col>
+          <Col span={12}>
+            <Form.Item
+              name='confirmPassword'
+              dependencies={['newPassword']}
+              rules={[
+                {
+                  required: true,
+                  message: 'Confirm your password!',
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    const { newPassword } = getFieldValue();
+
+                    if (newPassword === value) {
+                      return Promise.resolve();
+                    }
+
+                    return Promise.reject("Password didn't match!");
+                  },
+                }),
+              ]}
+              key='confirmPassword'
+            >
+              <Input.Password
+                prefix={<AiFillLock />}
+                type='text'
+                placeholder='Confirm password'
+              />
+            </Form.Item>
+          </Col>
         </Row>
-
-        <Form.Item
-          name='confirmPassword'
-          dependencies={['newPassword']}
-          rules={[
-            {
-              required: true,
-              message: 'Confirm your password!',
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                const { newPassword } = getFieldValue();
-
-                if (newPassword === value) {
-                  return Promise.resolve();
-                }
-
-                return Promise.reject("Password didn't match!");
-              },
-            }),
-          ]}
-          key='confirmPassword'
-        >
-          <Input.Password
-            prefix={<AiFillLock />}
-            type='text'
-            placeholder='Confirm password'
-          />
-        </Form.Item>
 
         <Form.Item>
           <Button type='primary' htmlType='submit'>
