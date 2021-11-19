@@ -1,20 +1,27 @@
 import React, { useEffect } from 'react';
-import Layout from 'components/layout/Layout';
+
 import { Row, Col, Image } from 'antd';
 import { Button, Spin } from 'antd';
-import { fetchEventImages, eventImageUpload } from 'store/action/event.action';
-import { useParams } from 'react-router-dom';
+import {
+  fetchEventImages,
+  eventImageUpload,
+  eventImageDelete,
+} from 'store/action/event.action';
 
 import { connect } from 'react-redux';
 
-const EventImageUpload = ({ fetchEventImages, images, eventImageUpload }) => {
-  const { id } = useParams();
-
+const EventImageUpload = ({
+  fetchEventImages,
+  images,
+  eventImageUpload,
+  eventImageDelete,
+  id,
+}) => {
   useEffect(() => fetchEventImages(id), [fetchEventImages, id]);
 
-  useEffect(() => console.log({ images }), [images]);
-
-  const onRemove = (id) => {};
+  const onRemove = (id) => {
+    eventImageDelete({ id });
+  };
 
   const imageOnChangHandler = (e) => {
     const reader = new FileReader();
@@ -30,8 +37,7 @@ const EventImageUpload = ({ fetchEventImages, images, eventImageUpload }) => {
   };
 
   return (
-    <Layout>
-      <h2>Image upload</h2>
+    <>
       <Row wrap gutter={25}>
         {images.map((image) => (
           <Col key={Math.random()}>
@@ -65,7 +71,7 @@ const EventImageUpload = ({ fetchEventImages, images, eventImageUpload }) => {
           <input type='file' onChange={imageOnChangHandler} />
         </Col>
       </Row>
-    </Layout>
+    </>
   );
 };
 
@@ -73,7 +79,5 @@ const mapStateToProps = (state) => {
   const { images } = state.event;
   return { images };
 };
-
-export default connect(mapStateToProps, { fetchEventImages, eventImageUpload })(
-  EventImageUpload
-);
+const actions = { fetchEventImages, eventImageUpload, eventImageDelete };
+export default connect(mapStateToProps, actions)(EventImageUpload);

@@ -93,6 +93,30 @@ const eventReducer = (state = init, action) => {
         images,
       };
     }
+    case types.EVENT_IMAGE_DELETE_STATUS: {
+      const { id } = action.payload;
+
+      const images = state.images.map((item) => {
+        if (item.id === id) {
+          item.isUploading = true;
+          return item;
+        }
+        return item;
+      });
+      return {
+        ...state,
+        images,
+      };
+    }
+    case types.EVENT_IMAGE_DELETE: {
+      const { id } = action.payload;
+
+      const images = state.images.filter((item) => item.id !== id);
+      return {
+        ...state,
+        images,
+      };
+    }
     default:
       return state;
   }

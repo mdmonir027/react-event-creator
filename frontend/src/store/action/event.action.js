@@ -2,6 +2,7 @@ import * as types from './actionTypes';
 import axios from 'axios';
 import { getToken } from 'utils/token';
 import shortid from 'shortid';
+import { message } from 'antd';
 axios.defaults.headers.common['Authorization'] = getToken();
 
 export const eventAdd = (values, cb) => async (dispatch) => {
@@ -156,7 +157,8 @@ export const eventImageUpload =
       console.log(tempId);
 
       const { data } = await axios.post(`/event/${id}/image`, formData);
-      console.log(data);
+
+      message.success('Image uploaded successfully');
 
       dispatch({
         type: types.EVENT_IMAGE_UPLOAD_UPDATE,
@@ -168,6 +170,34 @@ export const eventImageUpload =
         payload: {
           errors: e?.response?.data,
           errorType: 'e',
+        },
+      });
+    }
+  };
+
+export const eventImageDelete =
+  ({ id }) =>
+  async (dispatch) => {
+    try {
+      dispatch({
+        type: types.EVENT_IMAGE_DELETE_STATUS,
+        payload: { id },
+      });
+
+      const { data } = await axios.delete(`/event/image/${id}`);
+      message.success(data.message);
+
+      dispatch({
+        type: types.EVENT_IMAGE_DELETE,
+        payload: { id },
+      });
+    } catch (e) {
+      message.error('Image delete failed!');
+      dispatch({
+        type: types.SET_EVENT_ERROR,
+        payload: {
+          errors: e?.response?.data,
+          errorType: 'upload',
         },
       });
     }

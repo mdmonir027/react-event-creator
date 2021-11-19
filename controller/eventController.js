@@ -173,7 +173,7 @@ const controller = {
         const { filename } = req.file;
         const imageData = {
           filename,
-          event_id: req.params.id,
+          event_id: req.params.eventId,
         };
         const imageSave = await Image.create(imageData);
         const image = {
@@ -194,9 +194,9 @@ const controller = {
   },
   getImages: async (req, res) => {
     try {
-      const { id } = req.params;
+      const { eventId } = req.params;
       const data = await Image.findAll({
-        where: { event_id: id },
+        where: { event_id: eventId, isDeleted: false },
         attributes: { exclude: ['isDeleted', 'updatedAt'] },
       });
 
@@ -212,6 +212,16 @@ const controller = {
       });
 
       return res.status(200).json(images);
+    } catch (e) {
+      internalServerError(res, e);
+    }
+  },
+  imageDelete: async (req, res) => {
+    try {
+      const { imageId } = req.params;
+      await Image.update({ isDeleted: true }, { where: { id: imageId } });
+
+      return res.status(200).json({ message: 'Image Delete successfully!' });
     } catch (e) {
       internalServerError(res, e);
     }

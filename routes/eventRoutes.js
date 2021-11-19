@@ -9,6 +9,7 @@ const {
   remove,
   imageUpload,
   getImages,
+  imageDelete,
 } = require('../controller/eventController');
 const { validationErrorResponse } = require('../utils/errorResponses');
 const authenticate = require('../middleware/auth/authenticate');
@@ -31,7 +32,8 @@ router.put(
   update
 );
 router.delete('/:id', authenticate, remove);
-router.get('/:id/image', getImages);
-router.post('/:id/image', upload.single('image'), imageUpload);
+router.get('/:eventId/image', getImages);
+router.post('/:eventId/image', upload.single('image'), imageUpload);
+router.delete('/image/:imageId', imageDelete);
 
 module.exports = router;
