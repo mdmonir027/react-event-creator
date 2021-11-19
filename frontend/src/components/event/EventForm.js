@@ -73,7 +73,7 @@ const timeZoneList = [
   'UTC-12:00',
 ];
 
-const EventForm = ({ eventAdd, event, isEdit, eventUpdate, id }) => {
+const EventForm = ({ eventAdd, event, isEdit, eventUpdate, id, errors }) => {
   const classes = useStyles();
   const [countryList, setCountryList] = useState([]);
   const [country, setCountry] = useState('');
@@ -105,6 +105,19 @@ const EventForm = ({ eventAdd, event, isEdit, eventUpdate, id }) => {
       setTimezone(event.timezone || '');
     }
   }, [form, event, isEdit]);
+
+  useEffect(() => {
+    const errorObject =
+      Object.keys(errors).length > 0
+        ? Object.entries(errors).map(([name, value]) => {
+            return {
+              name,
+              errors: [value],
+            };
+          })
+        : [];
+    form.setFields(errorObject);
+  }, [errors, form]);
 
   useEffect(() => {
     axios
@@ -458,8 +471,9 @@ const EventForm = ({ eventAdd, event, isEdit, eventUpdate, id }) => {
 };
 const mapStateToProps = (state) => {
   const { errors, errorType, event } = state.event;
+
   return {
-    errors,
+    errors: errorType === 'add' || errorType === 'edit' ? errors : {},
     errorType,
     event,
   };
