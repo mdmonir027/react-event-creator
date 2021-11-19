@@ -26,6 +26,7 @@ export const loginAction =
     }
   };
 
+axios.defaults.headers.common['Authorization'] = getTokenData();
 export const findMe = () => async (dispatch) => {
   try {
     const { data } = await axios.get('/auth/me');

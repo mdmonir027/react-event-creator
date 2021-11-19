@@ -18,12 +18,13 @@ const controller = {
       if (!user) {
         return res.status(400).json(errorResponseMessage);
       }
+
       const match = await bcrypt.compare(password, user.password);
       if (!match) {
         return res.status(400).json(errorResponseMessage);
       }
 
-      const isAdmin = user.user_type === 'a' ? false : true;
+      const isAdmin = user.user_type !== 'A' ? false : true;
       const token = jwt.sign(
         {
           email: user.email,

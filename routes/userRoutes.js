@@ -5,11 +5,28 @@ const { validationErrorResponse } = require('../utils/errorResponses');
 const authenticate = require('../middleware/auth/authenticate');
 const isAdmin = require('../middleware/auth/isAdmin');
 
-router.get('/', authenticate, isAdmin, getAll);
+router.get(
+  '/',
+  (req, res, next) => {
+    console.log('first');
+    next();
+  },
+  authenticate,
+  (req, res, next) => {
+    console.log('second');
+    next();
+  },
+  isAdmin,
+  (req, res, next) => {
+    console.log(req.user);
+    next();
+  },
+  getAll
+);
 router.post(
   '/',
-  // authenticate,
-  // isAdmin,
+  authenticate,
+  isAdmin,
   userRegisterValidator,
   validationErrorResponse,
   create

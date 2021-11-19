@@ -1,7 +1,8 @@
 const passport = require('passport');
 
 module.exports = (req, res, next) => {
-  passport.authenticate('jwt', {}, (err, user, info) => {
+  passport.authenticate('jwt', { session: false }, (err, user, info) => {
+    console.log({ err, user, info });
     if (err) {
       console.log(err); // todo remove later
       console.log(info); // todo remove later

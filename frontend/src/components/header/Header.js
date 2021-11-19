@@ -26,12 +26,24 @@ const useStyles = createUseStyles({
   },
 });
 
-const Header = ({ findMe, fetchAllEvents, getAllUser, logout, name }) => {
+const Header = ({
+  findMe,
+  fetchAllEvents,
+  getAllUser,
+  logout,
+  name,
+  isAdmin,
+  isAuthenticated,
+}) => {
   const classes = useStyles();
 
   useEffect(() => findMe(), [findMe]);
   useEffect(() => fetchAllEvents(), [fetchAllEvents]);
-  useEffect(() => getAllUser(), [getAllUser]);
+  useEffect(() => {
+    if (isAuthenticated && isAdmin) {
+      getAllUser();
+    }
+  }, [getAllUser, isAdmin, isAuthenticated]);
 
   const navigate = useNavigate();
   const logoutHandler = () => {
@@ -69,7 +81,9 @@ const Header = ({ findMe, fetchAllEvents, getAllUser, logout, name }) => {
 
 const mapStateToProps = (state) => {
   const { name } = state.auth.me;
-  return { name };
+  const { isAdmin } = state.auth.user;
+  const { isAuthenticated } = state.auth;
+  return { name, isAdmin, isAuthenticated };
 };
 
 const actions = { findMe, fetchAllEvents, getAllUser, logout };
