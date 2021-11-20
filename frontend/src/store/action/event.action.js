@@ -3,8 +3,10 @@ import axios from 'axios';
 import { getToken } from 'utils/token';
 import shortid from 'shortid';
 import { message } from 'antd';
+
 axios.defaults.headers.common['Authorization'] = getToken();
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
+
 export const eventAdd = (values, cb) => async (dispatch) => {
   try {
     const res = await axios.post('/event', values);
@@ -18,7 +20,6 @@ export const eventAdd = (values, cb) => async (dispatch) => {
     });
     cb(true, { id: event.id });
   } catch (e) {
-    console.log(e?.response.data);
     dispatch({
       type: types.SET_EVENT_ERROR,
       payload: {
@@ -41,7 +42,6 @@ export const fetchAllEvents = () => async (dispatch) => {
       },
     });
   } catch (e) {
-    console.log(e?.response.data);
     dispatch({
       type: types.SET_EVENT_ERROR,
       payload: {
@@ -63,7 +63,6 @@ export const findPostForEdit = (id) => async (dispatch) => {
       },
     });
   } catch (e) {
-    console.log(e?.response.data);
     dispatch({
       type: types.SET_EVENT_ERROR,
       payload: {
@@ -78,7 +77,7 @@ export const eventUpdate = (values, id, cb) => async (dispatch) => {
   try {
     const res = await axios.put(`/event/${id}`, values);
     const event = res.data;
-    console.log(event);
+
     dispatch({
       type: types.UPDATE_EVENT,
       payload: {
@@ -100,9 +99,7 @@ export const eventUpdate = (values, id, cb) => async (dispatch) => {
 
 export const deleteEvent = (id) => async (dispatch) => {
   try {
-    console.log('delete event ', id);
-    const res = await axios.delete(`/event/${id}`);
-    console.log(res.data);
+    await axios.delete(`/event/${id}`);
 
     dispatch({
       type: types.DELETE_EVENT,

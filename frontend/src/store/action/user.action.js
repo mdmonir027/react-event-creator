@@ -18,7 +18,6 @@ export const addUser = (values, cb) => async (dispatch) => {
 
     cb(true);
   } catch (e) {
-    console.log(e);
     dispatch({
       type: types.SET_USER_ERROR,
       payload: {
@@ -41,7 +40,6 @@ export const getAllUser = () => async (dispatch) => {
       },
     });
   } catch (e) {
-    console.log(e);
     dispatch({
       type: types.SET_USER_ERROR,
       payload: {
@@ -61,7 +59,6 @@ export const deleteUser = (id) => async (dispatch) => {
       payload: { id },
     });
   } catch (e) {
-    console.log(e);
     dispatch({
       type: types.SET_USER_ERROR,
       payload: {

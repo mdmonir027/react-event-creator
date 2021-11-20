@@ -120,14 +120,11 @@ const EventForm = ({ eventAdd, event, isEdit, eventUpdate, id, errors }) => {
   }, [errors, form]);
 
   useEffect(() => {
-    axios
-      .get('https://restcountries.com/v3.1/all')
-      .then((res) => {
-        const list = res.data;
-        const countries = list.map((country) => country.name.common);
-        setCountryList(countries);
-      })
-      .catch((e) => console.log(e));
+    axios.get('https://restcountries.com/v3.1/all').then((res) => {
+      const list = res.data;
+      const countries = list.map((country) => country.name.common);
+      setCountryList(countries);
+    });
   }, []);
 
   const onFinish = (values) => {
