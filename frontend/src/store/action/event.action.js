@@ -4,7 +4,7 @@ import { getToken } from 'utils/token';
 import shortid from 'shortid';
 import { message } from 'antd';
 axios.defaults.headers.common['Authorization'] = getToken();
-
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 export const eventAdd = (values, cb) => async (dispatch) => {
   try {
     const res = await axios.post('/event', values);

@@ -16,10 +16,10 @@ const routes = [
     handler: userRoutes,
   },
   {
-    path: '/',
+    path: '/*',
     handler: (req, res) => {
       return res.status(200).json({
-        message: 'ok',
+        message: 'Server working',
       });
     },
   },

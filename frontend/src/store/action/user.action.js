@@ -3,6 +3,7 @@ import axios from 'axios';
 import { getToken } from 'utils/token';
 
 axios.defaults.headers.common['Authorization'] = getToken();
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 
 export const addUser = (values, cb) => async (dispatch) => {
   try {
