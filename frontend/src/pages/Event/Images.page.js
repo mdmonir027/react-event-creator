@@ -1,6 +1,5 @@
 import React from 'react';
 import EventImageUpload from 'components/event/EventImageUpload';
-import Layout from 'components/layout/Layout';
 import { useParams } from 'react-router';
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -12,10 +11,10 @@ const Images = () => {
     return <Navigate to='/' />;
   }
   return (
-    <Layout>
+    <>
       <h2>Image upload</h2>
       <EventImageUpload id={id} />
-    </Layout>
+    </>
   );
 };
 

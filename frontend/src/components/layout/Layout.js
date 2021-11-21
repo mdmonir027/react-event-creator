@@ -3,6 +3,7 @@ import Header from 'components/header/Header';
 import { Row, Col } from 'antd';
 import Sidebar from 'components/sidebar/Sidebar';
 import { createUseStyles } from 'react-jss';
+import { useLocation } from 'react-router-dom';
 
 const useStyles = createUseStyles({
   contentArea: {},
@@ -22,6 +23,10 @@ const useStyles = createUseStyles({
 });
 const Layout = ({ children }) => {
   const classes = useStyles();
+  const { pathname } = useLocation();
+  if (pathname === '/') {
+    return children;
+  }
   return (
     <div>
       <Row>

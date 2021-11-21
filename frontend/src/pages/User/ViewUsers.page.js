@@ -1,5 +1,4 @@
 import { Button, Col, Row } from 'antd';
-import Layout from 'components/layout/Layout';
 import UserTable from 'components/user/UserTable';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
@@ -21,7 +20,7 @@ const ViewUsers = ({ getAllUser }) => {
   }
 
   return (
-    <Layout>
+    <>
       <Row justify='space-between'>
         <Col>
           <h2>All User</h2>
@@ -33,7 +32,7 @@ const ViewUsers = ({ getAllUser }) => {
         </Col>
       </Row>
       <UserTable />
-    </Layout>
+    </>
   );
 };
 

@@ -1,7 +1,6 @@
 import EventForm from 'components/event/EventForm';
 import React from 'react';
 
-import Layout from 'components/layout/Layout';
 import { Button, Col, Row } from 'antd';
 import { Link } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
@@ -14,7 +13,7 @@ const AddEvent = () => {
     return <Navigate to='/' />;
   }
   return (
-    <Layout>
+    <>
       <Row justify='space-between'>
         <Col>
           <h2>Add Events</h2>
@@ -26,7 +25,7 @@ const AddEvent = () => {
         </Col>
       </Row>
       <EventForm />
-    </Layout>
+    </>
   );
 };
 

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Row, Col, Button } from 'antd';
-import Layout from 'components/layout/Layout';
 import EventForm from 'components/event/EventForm';
 import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -19,7 +18,7 @@ const EditEvent = ({ findPostForEdit }) => {
   }
 
   return (
-    <Layout>
+    <>
       <Row justify='space-between'>
         <Col>
           <h2>Edit Event</h2>
@@ -31,7 +30,7 @@ const EditEvent = ({ findPostForEdit }) => {
         </Col>
       </Row>
       <EventForm isEdit id={id} />
-    </Layout>
+    </>
   );
 };
 

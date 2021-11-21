@@ -1,4 +1,3 @@
-import Layout from 'components/layout/Layout';
 import UpdatePasswordForm from 'components/profile/UpdatePasswordForm';
 import React from 'react';
 import { Row, Col, Button } from 'antd';
@@ -14,7 +13,7 @@ const UpdatePassword = () => {
   }
 
   return (
-    <Layout>
+    <>
       <Row justify='space-between'>
         <Col>
           <h2>Update password Events</h2>
@@ -26,7 +25,7 @@ const UpdatePassword = () => {
         </Col>
       </Row>
       <UpdatePasswordForm />
-    </Layout>
+    </>
   );
 };
 
