@@ -14,23 +14,17 @@ const validator = {
       .not()
       .isEmpty()
       .withMessage('Please enter a username')
-      .custom(async (username) => {
+      .custom(async (username, { req }) => {
         const userData = await User.findOne({ where: { username } });
-        if (userData) {
+        if (!userData.isDeleted) {
           throw new Error('Username is already exists!');
         }
+        req.prevUserUsername = true;
         return true;
       }),
     body('email')
       .isEmail()
       .withMessage('Please enter a valid email address')
-      .custom(async (email) => {
-        const userData = await User.findOne({ where: { email } });
-        if (userData) {
-          throw new Error('Email is already exists!');
-        }
-        return true;
-      })
       .normalizeEmail(),
   ],
   userLoginValidator: [

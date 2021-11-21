@@ -15,6 +15,22 @@ const controller = {
       const salt = await bcrypt.genSalt(parseInt(SALT_ROUND));
       const hashPassword = await bcrypt.hash(generatedPassword, salt);
 
+      if (req.prevUserUsername) {
+        await User.update(
+          { isDeleted: false, password: hashPassword },
+          { where: { username } }
+        );
+        const user = await User.findOne(
+          { where: { username } },
+          {
+            attributes: { exclude: ['isDeleted', 'updatedAt', 'password'] },
+          }
+        );
+
+        sendMail(generatedPassword, req.get('host'), user.email);
+        return res.status(200).json(user);
+      }
+
       const userData = {
         name,
         username,
