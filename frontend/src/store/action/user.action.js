@@ -3,6 +3,7 @@ import axios from 'axios';
 import { getToken } from 'utils/token';
 
 axios.defaults.headers.common['Authorization'] = getToken();
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 
 export const addUser = (values, cb) => async (dispatch) => {
   try {
@@ -17,7 +18,6 @@ export const addUser = (values, cb) => async (dispatch) => {
 
     cb(true);
   } catch (e) {
-    console.log(e);
     dispatch({
       type: types.SET_USER_ERROR,
       payload: {
@@ -40,7 +40,6 @@ export const getAllUser = () => async (dispatch) => {
       },
     });
   } catch (e) {
-    console.log(e);
     dispatch({
       type: types.SET_USER_ERROR,
       payload: {
@@ -60,7 +59,6 @@ export const deleteUser = (id) => async (dispatch) => {
       payload: { id },
     });
   } catch (e) {
-    console.log(e);
     dispatch({
       type: types.SET_USER_ERROR,
       payload: {

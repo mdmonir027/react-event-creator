@@ -2,6 +2,7 @@ import * as types from './actionTypes';
 import axios from 'axios';
 import { storeToken, getTokenData, removeToken } from 'utils/token';
 import { message } from 'antd';
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 
 export const loginAction =
   ({ username, password }) =>
