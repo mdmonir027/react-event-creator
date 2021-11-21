@@ -31,6 +31,22 @@ const controller = {
         return res.status(200).json(user);
       }
 
+      if (req.prevUserEmail) {
+        await User.update(
+          { isDeleted: false, password: hashPassword },
+          { where: { email } }
+        );
+        const user = await User.findOne(
+          { where: { email } },
+          {
+            attributes: { exclude: ['isDeleted', 'updatedAt', 'password'] },
+          }
+        );
+
+        sendMail(generatedPassword, req.get('host'), user.email);
+        return res.status(200).json(user);
+      }
+
       const userData = {
         name,
         username,

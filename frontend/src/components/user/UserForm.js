@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { Form, Input, Button, Row, Col } from 'antd';
+import { Form, Input, Button, Row, Col, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { AiOutlineLogin, AiOutlineMail } from 'react-icons/ai';
 import { addUser } from 'store/action/user.action';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router';
+import routeList from 'utils/routeList';
 
 const UserForm = ({ addUser, errors }) => {
   const [form] = Form.useForm();
@@ -12,7 +13,14 @@ const UserForm = ({ addUser, errors }) => {
   const onFinish = (values) => {
     addUser(values, (result) => {
       if (result) {
-        navigate('/user');
+        message.success('User created successfully! Redirecting.....', 1);
+        form.resetFields();
+
+        setTimeout(() => {
+          navigate(routeList.user.view);
+        }, 1300);
+      } else {
+        message.error('Error. Please Try again!');
       }
     });
   };

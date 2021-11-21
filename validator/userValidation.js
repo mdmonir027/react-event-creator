@@ -16,15 +16,38 @@ const validator = {
       .withMessage('Please enter a username')
       .custom(async (username, { req }) => {
         const userData = await User.findOne({ where: { username } });
+
+        if (!userData) {
+          return true;
+        }
+
         if (!userData.isDeleted) {
           throw new Error('Username is already exists!');
         }
+
         req.prevUserUsername = true;
         return true;
       }),
     body('email')
       .isEmail()
       .withMessage('Please enter a valid email address')
+      .custom(async (email, { req }) => {
+        if (req.prevUserUsername) {
+          return true;
+        }
+        const userData = await User.findOne({ where: { email } });
+
+        if (!userData) {
+          return true;
+        }
+
+        if (!userData.isDeleted) {
+          throw new Error('Email is already exists!');
+        }
+
+        req.prevUserEmail = true;
+        return true;
+      })
       .normalizeEmail(),
   ],
   userLoginValidator: [

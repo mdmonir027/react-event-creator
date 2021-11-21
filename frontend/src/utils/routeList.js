@@ -6,7 +6,7 @@ const routeList = {
     edit: '/event/edit/:id',
   },
   user: {
-    add: '/user',
+    add: '/user/add',
     view: '/user/view',
   },
   profile: {

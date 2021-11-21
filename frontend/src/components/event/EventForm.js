@@ -11,6 +11,7 @@ import {
   TimePicker,
   Switch,
   Space,
+  message,
 } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { createUseStyles } from 'react-jss';
@@ -23,6 +24,7 @@ import { eventAdd, eventUpdate } from 'store/action/event.action';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import EventImageUpload from './EventImageUpload';
+import routeList from 'utils/routeList';
 
 const useStyles = createUseStyles({
   form: {},
@@ -123,7 +125,7 @@ const EventForm = ({ eventAdd, event, isEdit, eventUpdate, id, errors }) => {
     axios.get('https://restcountries.com/v3.1/all').then((res) => {
       const list = res.data;
       const countries = list.map((country) => country.name.common);
-      setCountryList(countries);
+      setCountryList(countries.sort());
     });
   }, []);
 
@@ -138,9 +140,14 @@ const EventForm = ({ eventAdd, event, isEdit, eventUpdate, id, errors }) => {
       eventAdd({ ...values, country, timezone }, (result, { id }) => {
         if (result) {
           form.resetFields();
-          if (isImageUpload) {
-            navigate(`/event/${id}/image`);
-          }
+          message.success('Event created. Redirecting......');
+          setTimeout(() => {
+            if (isImageUpload) {
+              navigate(`/event/${id}/image`);
+            } else {
+              navigate(routeList.event.view);
+            }
+          }, 1000);
         }
       });
     }
@@ -325,6 +332,7 @@ const EventForm = ({ eventAdd, event, isEdit, eventUpdate, id, errors }) => {
             </Col>
             <Col span={12}>
               <Form.Item
+                dependencies={['time_to']}
                 hasFeedback
                 name='time_from'
                 key='time_from'
@@ -344,6 +352,7 @@ const EventForm = ({ eventAdd, event, isEdit, eventUpdate, id, errors }) => {
             </Col>
             <Col span={12}>
               <Form.Item
+                dependencies={['time_from']}
                 hasFeedback
                 name='time_to'
                 key='time_to'
@@ -352,6 +361,20 @@ const EventForm = ({ eventAdd, event, isEdit, eventUpdate, id, errors }) => {
                     required: true,
                     message: 'Time is required!',
                   },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      const result =
+                        moment(value).diff(
+                          moment(getFieldValue.time_from).toDate()
+                        ) > 0;
+                      if (result) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        'Time must be greater than time from'
+                      );
+                    },
+                  }),
                 ]}
               >
                 <TimePicker
