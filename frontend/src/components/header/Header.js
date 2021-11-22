@@ -38,8 +38,13 @@ const Header = ({
 }) => {
   const classes = useStyles();
 
-  useEffect(() => findMe(), [findMe]);
-  useEffect(() => fetchAllEvents(), [fetchAllEvents]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      findMe();
+      fetchAllEvents();
+    }
+  }, [findMe, isAuthenticated, fetchAllEvents]);
+
   useEffect(() => {
     if (isAuthenticated && isAdmin) {
       getAllUser();
