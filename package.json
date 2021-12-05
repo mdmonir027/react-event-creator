@@ -11,7 +11,11 @@
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install"
   },
   "keywords": [],
-  "author": "Md Monirul Islam",
+  "author": {
+    "name": "Md Monirul Islam",
+    "email": "mmislam027@gmail.com",
+    "url": "https://github.com/mdmonir027"
+  },
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
