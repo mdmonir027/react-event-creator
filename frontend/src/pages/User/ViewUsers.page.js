@@ -1,14 +1,12 @@
 import { Button, Col, Row } from 'antd';
 import UserTable from 'components/user/UserTable';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { getAllUser } from 'store/action/user.action';
 import routeList from 'utils/routeList';
 
-const ViewUsers = ({ getAllUser }) => {
+const ViewUsers = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   if (!isAuthenticated) {
     return <Navigate to='/' />;
@@ -34,4 +32,4 @@ const ViewUsers = ({ getAllUser }) => {
   );
 };
 
-export default connect(null, { getAllUser })(ViewUsers);
+export default ViewUsers;

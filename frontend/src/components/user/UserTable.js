@@ -64,10 +64,13 @@ const UserTable = () => {
   const dataSource = useMemo(() => {
     if (!isSuccess) return [];
     return users.reduce((acc, cur) => {
-      //   cur.deleteUser = deleteUser;
+      acc.push({
+        ...cur,
+        deleteUser,
+      });
       return acc;
     }, []);
-  }, [users, isSuccess]);
+  }, [users, isSuccess, deleteUser]);
 
   if (!isSuccess) return null;
   return (
