@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import { Form, Input, Button, Typography } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Typography } from 'antd';
+import { useLoginMutation } from 'features/auth/authApiSlice';
+import { useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
-import { connect } from 'react-redux';
-import { loginAction } from 'store/action/auth.action';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = createUseStyles({
   form: {
@@ -20,12 +20,22 @@ const useStyles = createUseStyles({
   },
 });
 
-const LoginForm = ({ loginAction, errors }) => {
+const LoginForm = ({ errors = {} }) => {
   const classes = useStyles();
+  const [login, { isSuccess }] = useLoginMutation();
+  const navigate = useNavigate();
   const [form] = Form.useForm();
+
   const onFinish = (values) => {
-    loginAction(values);
+    login(values);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate('/home');
+    }
+  }, [isSuccess, navigate]);
+
   useEffect(() => {
     const errorObject =
       Object.keys(errors).length > 0
@@ -91,12 +101,4 @@ const LoginForm = ({ loginAction, errors }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  const { errors, errorType } = state.auth;
-  return {
-    errors: errorType === 'login' ? errors : {},
-  };
-};
-const functions = { loginAction };
-
-export default connect(mapStateToProps, functions)(LoginForm);
+export default LoginForm;

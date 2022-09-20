@@ -43,7 +43,7 @@ const controller = {
 
       return res.status(200).json({
         message: 'Login was successful',
-        token: `Bearer ${token}`,
+        token,
       });
     } catch (e) {
       internalServerError(res, e);
