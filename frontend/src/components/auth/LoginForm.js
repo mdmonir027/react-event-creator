@@ -22,7 +22,7 @@ const useStyles = createUseStyles({
 
 const LoginForm = ({ errors = {} }) => {
   const classes = useStyles();
-  const [login, { isSuccess }] = useLoginMutation();
+  const [login, { isSuccess, isError, error }] = useLoginMutation();
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
@@ -37,17 +37,20 @@ const LoginForm = ({ errors = {} }) => {
   }, [isSuccess, navigate]);
 
   useEffect(() => {
-    const errorObject =
-      Object.keys(errors).length > 0
-        ? Object.entries(errors).map(([name, value]) => {
-            return {
-              name,
-              errors: [value],
-            };
-          })
-        : [];
-    form.setFields(errorObject);
-  }, [errors, form]);
+    if (isError) {
+      const errorArray = Object.entries(error.data).reduce(
+        (acc, [key, value]) => {
+          acc.push({
+            name: key,
+            errors: [value],
+          });
+          return acc;
+        },
+        []
+      );
+      form.setFields(errorArray);
+    }
+  }, [error, isError, form]);
   return (
     <Form
       name='normal_login'
