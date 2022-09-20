@@ -1,10 +1,11 @@
-import { Button, Space, Table, Popconfirm } from 'antd';
+import { Button, Popconfirm, Space, Table } from 'antd';
+import {
+  useDeleteUserMutation,
+  useGetUsersQuery,
+} from 'features/user/userApiSlice';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
-
-import { connect } from 'react-redux';
-import { deleteUser } from 'store/action/user.action';
 
 const columns = [
   {
@@ -56,16 +57,19 @@ const columns = [
     },
   },
 ];
-const UserTable = ({ users, deleteUser }) => {
-  const [dataSource, setDataSource] = useState([]);
-  useEffect(() => {
-    setDataSource(
-      users.map((user) => {
-        user.deleteUser = deleteUser;
-        return user;
-      })
-    );
-  }, [users, deleteUser]);
+const UserTable = () => {
+  const { data: users, isLoading, isSuccess } = useGetUsersQuery();
+  const [deleteUser] = useDeleteUserMutation();
+
+  const dataSource = useMemo(() => {
+    if (!isSuccess) return [];
+    return users.reduce((acc, cur) => {
+      //   cur.deleteUser = deleteUser;
+      return acc;
+    }, []);
+  }, [users, isSuccess]);
+
+  if (!isSuccess) return null;
   return (
     <div>
       <Table dataSource={dataSource} columns={columns} rowKey='id' />
@@ -73,9 +77,4 @@ const UserTable = ({ users, deleteUser }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  const { users } = state.user;
-  return { users };
-};
-
-export default connect(mapStateToProps, { deleteUser })(UserTable);
+export default UserTable;

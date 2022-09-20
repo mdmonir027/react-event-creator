@@ -1,41 +1,50 @@
-import React, { useEffect } from 'react';
-import { Form, Input, Button, Row, Col, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Input, message, Row } from 'antd';
+import { useAddUserMutation } from 'features/user/userApiSlice';
+import { useEffect } from 'react';
 import { AiOutlineLogin, AiOutlineMail } from 'react-icons/ai';
-import { addUser } from 'store/action/user.action';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { addUser } from 'store/action/user.action';
 import routeList from 'utils/routeList';
 
-const UserForm = ({ addUser, errors }) => {
+const UserForm = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const onFinish = (values) => {
-    addUser(values, (result) => {
-      if (result) {
-        message.success('User created successfully! Redirecting.....', 1);
-        form.resetFields();
 
-        setTimeout(() => {
-          navigate(routeList.user.view);
-        }, 1300);
-      } else {
-        message.error('Error. Please Try again!');
-      }
-    });
+  const [addUser, { isSuccess, isError, error }] = useAddUserMutation();
+
+  const onFinish = (values) => {
+    addUser(values);
   };
+
   useEffect(() => {
-    const errorObject =
-      Object.keys(errors).length > 0
-        ? Object.entries(errors).map(([name, value]) => {
-            return {
-              name,
-              errors: [value],
-            };
-          })
-        : [];
-    form.setFields(errorObject);
-  }, [errors, form]);
+    if (isSuccess) {
+      form.resetFields();
+      message.success('User created successfully! Redirecting.....', 1);
+      setTimeout(() => {
+        navigate(routeList.user.view);
+      }, 1300);
+    }
+  }, [form, isSuccess, navigate]);
+
+  useEffect(() => {
+    if (isError) {
+      message.error('Error. Please Try again!');
+      const errorArray = Object.entries(error.data).reduce(
+        (acc, [key, value]) => {
+          acc.push({
+            name: key,
+            errors: [value],
+          });
+          return acc;
+        },
+        []
+      );
+      form.setFields(errorArray);
+    }
+  }, [error, isError, form]);
+
   return (
     <div>
       <Row>
@@ -116,12 +125,8 @@ const UserForm = ({ addUser, errors }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  const { errors, type } = state.user;
-
-  return {
-    errors: type === 'add' ? errors : {},
-  };
-};
+const mapStateToProps = (state) => ({
+  errors: {},
+});
 
 export default connect(mapStateToProps, { addUser })(UserForm);

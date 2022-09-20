@@ -1,5 +1,6 @@
 import LoginForm from 'components/auth/LoginForm';
 import { createUseStyles } from 'react-jss';
+import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import routeList from 'utils/routeList';
 
@@ -20,7 +21,7 @@ const useStyles = createUseStyles({
 const Login = () => {
   const classes = useStyles();
 
-  const isAuthenticated = false;
+  const { isAuthenticated } = useSelector((state) => state.auth);
   if (isAuthenticated) {
     return <Navigate to={routeList.event.view} />;
   }
