@@ -21,17 +21,15 @@ const UserForm = () => {
   useEffect(() => {
     if (isSuccess) {
       form.resetFields();
-      message.success('User created successfully! Redirecting.....', 1);
-      setTimeout(() => {
-        navigate(routeList.user.view);
-      }, 1300);
+      message.success('User created successfully!', 1);
+      navigate(routeList.user.view);
     }
   }, [form, isSuccess, navigate]);
 
   useEffect(() => {
     if (isError) {
       message.error('Error. Please Try again!');
-      const errorArray = Object.entries(error.data).reduce(
+      const errorArray = Object.entries(error.data)?.reduce(
         (acc, [key, value]) => {
           acc.push({
             name: key,

@@ -1,10 +1,10 @@
-import { Button, Popconfirm, Space, Table } from 'antd';
+import { Button, message, Popconfirm, Space, Table } from 'antd';
 import {
   useDeleteUserMutation,
   useGetUsersQuery,
 } from 'features/user/userApiSlice';
 import moment from 'moment';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
 
 const columns = [
@@ -39,16 +39,17 @@ const columns = [
     title: 'Action',
     dataIndex: 'id',
     key: 'action',
-    render: (id, { deleteUser }) => {
+    render: (id, { deleteUser, user_type }) => {
       return (
         <Space>
           <Popconfirm
             okText='Yes'
             cancelText='No'
+            disabled={user_type === 'A'}
             title='Are you sure to delete this user?'
             onConfirm={() => deleteUser(id)}
           >
-            <Button>
+            <Button disabled={user_type === 'A'}>
               <FaTrashAlt />
             </Button>
           </Popconfirm>
@@ -58,8 +59,8 @@ const columns = [
   },
 ];
 const UserTable = () => {
-  const { data: users, isLoading, isSuccess } = useGetUsersQuery();
-  const [deleteUser] = useDeleteUserMutation();
+  const { data: users, isSuccess } = useGetUsersQuery();
+  const [deleteUser, { isSuccess: isDeleteSuccess }] = useDeleteUserMutation();
 
   const dataSource = useMemo(() => {
     if (!isSuccess) return [];
@@ -71,6 +72,12 @@ const UserTable = () => {
       return acc;
     }, []);
   }, [users, isSuccess, deleteUser]);
+
+  useEffect(() => {
+    if (isDeleteSuccess) {
+      message.success('User delete successfully', 1);
+    }
+  }, [isDeleteSuccess]);
 
   if (!isSuccess) return null;
   return (

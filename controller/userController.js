@@ -57,7 +57,7 @@ const controller = {
 
       const userSave = await User.create(userData);
 
-      sendMail(generatedPassword, req.get('host'), email);
+      //   sendMail(generatedPassword, req.get('host'), email);
 
       const user = await User.findByPk(userSave.id, {
         attributes: { exclude: ['isDeleted', 'updatedAt', 'password'] },
