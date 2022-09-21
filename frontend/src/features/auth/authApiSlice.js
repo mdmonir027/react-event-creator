@@ -53,7 +53,46 @@ export const authApi = apiSlice.injectEndpoints({
         }
       },
     }),
+    getMe: builder.query({
+      query: () => ({
+        url: '/auth/me',
+        method: 'get',
+      }),
+    }),
+    updateFullName: builder.mutation({
+      query: ({ name }) => ({
+        url: '/auth/me/name',
+        method: 'post',
+        body: { name },
+      }),
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        const patchResult = dispatch(
+          apiSlice.util.updateQueryData('getMe', undefined, (draft) => {
+            draft.name = arg.name;
+          })
+        );
+
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          patchResult.undo();
+        }
+      },
+    }),
+    updatePassword: builder.mutation({
+      query: (data) => ({
+        url: '/auth/me/password',
+        method: 'put',
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation } = authApi;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useGetMeQuery,
+  useUpdateFullNameMutation,
+  useUpdatePasswordMutation,
+} = authApi;
