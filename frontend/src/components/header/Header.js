@@ -1,14 +1,11 @@
-import React, { useEffect } from 'react';
-import { Menu, Avatar } from 'antd';
+import { Avatar, Menu } from 'antd';
+import { useGetMeQuery } from 'features/auth/authApiSlice';
+import { userLoggedOut } from 'features/auth/authSlice';
 import { createUseStyles } from 'react-jss';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { findMe } from 'store/action/auth.action';
-import { fetchAllEvents } from 'store/action/event.action';
-import { getAllUser } from 'store/action/user.action';
-import { logout } from 'store/action/auth.action';
-import { useNavigate } from 'react-router-dom';
 import routeList from 'utils/routeList';
+import { removeToken } from 'utils/token';
 const useStyles = createUseStyles({
   subMenu: {
     padding: 0,
@@ -27,37 +24,18 @@ const useStyles = createUseStyles({
   },
 });
 
-const Header = ({
-  findMe,
-  fetchAllEvents,
-  getAllUser,
-  logout,
-  name,
-  isAdmin,
-  isAuthenticated,
-}) => {
+const Header = () => {
+  const dispatch = useDispatch();
+
   const classes = useStyles();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      findMe();
-      fetchAllEvents();
-    }
-  }, [findMe, isAuthenticated, fetchAllEvents]);
+  const { data: me, isLoading } = useGetMeQuery();
 
-  useEffect(() => {
-    if (isAuthenticated && isAdmin) {
-      getAllUser();
-    }
-  }, [getAllUser, isAdmin, isAuthenticated]);
-
-  const navigate = useNavigate();
   const logoutHandler = () => {
-    const result = logout();
-    if (result) {
-      navigate('/');
-    }
+    removeToken();
+    dispatch(userLoggedOut());
   };
+  if (isLoading) return null;
   return (
     <div className={classes.main}>
       <div>
@@ -66,7 +44,7 @@ const Header = ({
             key='SubMenu'
             className={classes.subMenu}
             icon={
-              <Avatar src={`https://eu.ui-avatars.com/api/?name=${name}`} />
+              <Avatar src={`https://eu.ui-avatars.com/api/?name=${me.name}`} />
             }
           >
             <Menu.Item key='setting:1'>
@@ -85,13 +63,4 @@ const Header = ({
   );
 };
 
-const mapStateToProps = (state) => {
-  const { name } = state.auth.me;
-  const { isAdmin } = state.auth.user;
-  const { isAuthenticated } = state.auth;
-  return { name, isAdmin, isAuthenticated };
-};
-
-const actions = { findMe, fetchAllEvents, getAllUser, logout };
-
-export default connect(mapStateToProps, actions)(Header);
+export default Header;

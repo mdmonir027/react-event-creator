@@ -4,6 +4,7 @@ import { useLoginMutation } from 'features/auth/authApiSlice';
 import { useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
 import { useNavigate } from 'react-router-dom';
+import routeList from 'utils/routeList';
 
 const useStyles = createUseStyles({
   form: {
@@ -32,7 +33,7 @@ const LoginForm = ({ errors = {} }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/home');
+      navigate(routeList.event.view);
     }
   }, [isSuccess, navigate]);
 
