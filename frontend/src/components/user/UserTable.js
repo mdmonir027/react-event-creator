@@ -1,10 +1,11 @@
-import { Button, Space, Table, Popconfirm } from 'antd';
+import { Button, message, Popconfirm, Space, Table } from 'antd';
+import {
+  useDeleteUserMutation,
+  useGetUsersQuery,
+} from 'features/user/userApiSlice';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
-
-import { connect } from 'react-redux';
-import { deleteUser } from 'store/action/user.action';
 
 const columns = [
   {
@@ -38,16 +39,17 @@ const columns = [
     title: 'Action',
     dataIndex: 'id',
     key: 'action',
-    render: (id, { deleteUser }) => {
+    render: (id, { deleteUser, user_type }) => {
       return (
         <Space>
           <Popconfirm
             okText='Yes'
             cancelText='No'
+            disabled={user_type === 'A'}
             title='Are you sure to delete this user?'
             onConfirm={() => deleteUser(id)}
           >
-            <Button>
+            <Button disabled={user_type === 'A'}>
               <FaTrashAlt />
             </Button>
           </Popconfirm>
@@ -56,16 +58,28 @@ const columns = [
     },
   },
 ];
-const UserTable = ({ users, deleteUser }) => {
-  const [dataSource, setDataSource] = useState([]);
+const UserTable = () => {
+  const { data: users, isSuccess } = useGetUsersQuery();
+  const [deleteUser, { isSuccess: isDeleteSuccess }] = useDeleteUserMutation();
+
+  const dataSource = useMemo(() => {
+    if (!isSuccess) return [];
+    return users.reduce((acc, cur) => {
+      acc.push({
+        ...cur,
+        deleteUser,
+      });
+      return acc;
+    }, []);
+  }, [users, isSuccess, deleteUser]);
+
   useEffect(() => {
-    setDataSource(
-      users.map((user) => {
-        user.deleteUser = deleteUser;
-        return user;
-      })
-    );
-  }, [users, deleteUser]);
+    if (isDeleteSuccess) {
+      message.success('User delete successfully', 1);
+    }
+  }, [isDeleteSuccess]);
+
+  if (!isSuccess) return null;
   return (
     <div>
       <Table dataSource={dataSource} columns={columns} rowKey='id' />
@@ -73,9 +87,4 @@ const UserTable = ({ users, deleteUser }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  const { users } = state.user;
-  return { users };
-};
-
-export default connect(mapStateToProps, { deleteUser })(UserTable);
+export default UserTable;

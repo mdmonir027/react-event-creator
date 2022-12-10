@@ -1,8 +1,7 @@
-import React from 'react';
 import LoginForm from 'components/auth/LoginForm';
 import { createUseStyles } from 'react-jss';
-import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 import routeList from 'utils/routeList';
 
 const useStyles = createUseStyles({

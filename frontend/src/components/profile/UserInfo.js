@@ -1,25 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Col } from 'antd';
-import style from './userInfo.module.css';
-import { FaPencilAlt } from 'react-icons/fa';
-import { AiFillCloseCircle } from 'react-icons/ai';
-import { connect } from 'react-redux';
+import { Col, message, Row } from 'antd';
+import {
+  useGetMeQuery,
+  useUpdateFullNameMutation,
+} from 'features/auth/authApiSlice';
 import moment from 'moment';
-import { updateUserFullName } from 'store/action/auth.action';
+import { useEffect, useState } from 'react';
+import { AiFillCloseCircle } from 'react-icons/ai';
+import { FaPencilAlt } from 'react-icons/fa';
+import style from './userInfo.module.css';
 
-const UserInfo = ({ userData, updateUserFullName }) => {
+const UserInfo = () => {
   const [isEdit, setIsEdit] = useState(false);
-
   const [value, setValue] = useState('');
+
+  const { data: userData, isLoading, isSuccess } = useGetMeQuery();
+  const [updateUserFullName, { data: updateData, isSuccess: isUpdateSuccess }] =
+    useUpdateFullNameMutation();
 
   const keyDownHandler = (event) => {
     if (event.key === 'Enter') {
       setIsEdit(false);
-      updateUserFullName(value);
+      updateUserFullName({ name: value });
     }
   };
 
-  useEffect(() => setValue(userData.name), [userData.name]);
+  useEffect(() => {
+    if (isSuccess) {
+      setValue(userData?.name);
+    }
+  }, [userData, isSuccess]);
+
+  useEffect(() => {
+    if (isUpdateSuccess) {
+      message.success({
+        content: updateData.message,
+        style: {
+          marginTop: '10vh',
+        },
+      });
+    }
+  }, [isUpdateSuccess, updateData]);
+
+  if (isLoading) return null;
 
   return (
     <div>
@@ -98,9 +120,4 @@ const UserInfo = ({ userData, updateUserFullName }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  const { me } = state.auth;
-
-  return { userData: me };
-};
-export default connect(mapStateToProps, { updateUserFullName })(UserInfo);
+export default UserInfo;

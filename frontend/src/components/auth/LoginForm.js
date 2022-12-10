@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
-import { Form, Input, Button, Typography } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Typography } from 'antd';
+import { useLoginMutation } from 'features/auth/authApiSlice';
+import { useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
-import { connect } from 'react-redux';
-import { loginAction } from 'store/action/auth.action';
+import { useNavigate } from 'react-router-dom';
+import routeList from 'utils/routeList';
 
 const useStyles = createUseStyles({
   form: {
@@ -20,24 +21,37 @@ const useStyles = createUseStyles({
   },
 });
 
-const LoginForm = ({ loginAction, errors }) => {
+const LoginForm = ({ errors = {} }) => {
   const classes = useStyles();
+  const [login, { isSuccess, isError, error }] = useLoginMutation();
+  const navigate = useNavigate();
   const [form] = Form.useForm();
+
   const onFinish = (values) => {
-    loginAction(values);
+    login(values);
   };
+
   useEffect(() => {
-    const errorObject =
-      Object.keys(errors).length > 0
-        ? Object.entries(errors).map(([name, value]) => {
-            return {
-              name,
-              errors: [value],
-            };
-          })
-        : [];
-    form.setFields(errorObject);
-  }, [errors, form]);
+    if (isSuccess) {
+      navigate(routeList.event.view);
+    }
+  }, [isSuccess, navigate]);
+
+  useEffect(() => {
+    if (isError) {
+      const errorArray = Object.entries(error.data).reduce(
+        (acc, [key, value]) => {
+          acc.push({
+            name: key,
+            errors: [value],
+          });
+          return acc;
+        },
+        []
+      );
+      form.setFields(errorArray);
+    }
+  }, [error, isError, form]);
   return (
     <Form
       name='normal_login'
@@ -91,12 +105,4 @@ const LoginForm = ({ loginAction, errors }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  const { errors, errorType } = state.auth;
-  return {
-    errors: errorType === 'login' ? errors : {},
-  };
-};
-const functions = { loginAction };
-
-export default connect(mapStateToProps, functions)(LoginForm);
+export default LoginForm;

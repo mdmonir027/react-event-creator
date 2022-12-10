@@ -1,3 +1,5 @@
+import jwtDecode from 'jwt-decode';
+
 const tokenName = 'token';
 
 export const storeToken = (token) => {
@@ -12,7 +14,7 @@ export const getTokenData = () => {
   const token = getToken();
 
   try {
-    return JSON.parse(atob(token.split('.')[1]));
+    return jwtDecode(token);
   } catch (e) {
     return {};
   }

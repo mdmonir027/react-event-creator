@@ -1,12 +1,11 @@
-import React from 'react';
-import { Menu } from 'antd';
 import { AppstoreOutlined, MailOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Menu } from 'antd';
+import { userLoggedOut } from 'features/auth/authSlice';
 import { createUseStyles } from 'react-jss';
-import { logout } from 'store/action/auth.action';
-import { useNavigate } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import routeList from 'utils/routeList';
+import { removeToken } from 'utils/token';
 
 const useStyles = createUseStyles({
   menu: {
@@ -18,15 +17,14 @@ const useStyles = createUseStyles({
   },
 });
 
-const Sidebar = ({ logout, isAdmin }) => {
+const Sidebar = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const { isAdmin } = useSelector((state) => state.auth.user);
 
-  const navigate = useNavigate();
   const logoutHandler = () => {
-    const result = logout();
-    if (result) {
-      navigate('/');
-    }
+    removeToken();
+    dispatch(userLoggedOut());
   };
 
   return (
@@ -73,9 +71,4 @@ const Sidebar = ({ logout, isAdmin }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  const { isAdmin } = state.auth.user;
-  return { isAdmin };
-};
-
-export default connect(mapStateToProps, { logout })(Sidebar);
+export default Sidebar;
